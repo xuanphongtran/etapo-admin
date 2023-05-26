@@ -18,16 +18,16 @@ module.exports = {
     'react-refresh/only-export-components': 'warn',
     'no-undef': ['warn'],
     'no-unused-vars': ['warn'],
-    'indent': [
-      'warn',
-      2,
-      {
-        SwitchCase: 1,
-        FunctionDeclaration: {
-          body: 1,
-          parameters: 2,
-        },
-      },
-    ],
+    // 'indent': [
+    //   'warn',
+    //   2,
+    //   {
+    //     SwitchCase: 0,
+    //     FunctionDeclaration: {
+    //       body: 1,
+    //       parameters: 2,
+    //     },
+    //   },
+    // ],
   },
 }
