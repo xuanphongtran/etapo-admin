@@ -15,6 +15,7 @@ module.exports = {
     // 'no-trailing-spaces': 'warn',
     // 'semi': ['error', 'never'],
     // 'quotes': ['error', 'single'],
+    'prop-types': 'none',
     'react-refresh/only-export-components': 'warn',
     'no-undef': ['warn'],
     'no-unused-vars': ['warn'],
