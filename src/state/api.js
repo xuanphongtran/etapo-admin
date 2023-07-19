@@ -21,7 +21,7 @@ export const api = createApi({
       providesTags: ['User'],
     }),
     getProducts: build.query({
-      query: () => 'client/products',
+      query: () => ({ url: 'client/products', method: 'GET' }),
       providesTags: ['Products'],
     }),
     getCustomers: build.query({
@@ -56,6 +56,16 @@ export const api = createApi({
       query: () => 'general/dashboard',
       providesTags: ['Dashboard'],
     }),
+    createProduct: build.mutation({
+      query: (data) => ({ url: 'client/products', method: 'POST', body: data }),
+      invalidatesTags: ['Post'],
+    }),
+    deleteProduct: build.mutation({
+      query: (id) => ({ url: `client/products/${id}`, method: 'DELETE' }),
+    }),
+    updateProduct: build.mutation({
+      query: (id, data) => ({ url: `client/products/${id}`, method: 'PUT', body: data }),
+    }),
   }),
 })
 
@@ -69,4 +79,7 @@ export const {
   useGetAdminsQuery,
   useGetUserPerformanceQuery,
   useGetDashboardQuery,
+  useCreateProductMutation,
+  useDeleteProductMutation,
+  useUpdateProductMutation,
 } = api

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react'
-import { Box, useMediaQuery } from '@mui/material'
+import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { Outlet } from 'react-router-dom'
 import Navbar from 'components/Navbar'
 import Sidebar from 'components/Sidebar'
