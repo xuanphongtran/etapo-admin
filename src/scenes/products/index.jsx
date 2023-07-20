@@ -23,6 +23,7 @@ import { useDeleteProductMutation, useGetProductsQuery } from 'state/api'
 import Header from 'components/Header'
 import ProductForm from './createProduct'
 import { set } from 'react-hook-form'
+import Notification from 'components/dialog/Notification'
 
 const Product = ({
   _id,
@@ -83,27 +84,28 @@ const Product = ({
         >
           Delete
         </Button>
-
+        {/* Dialog Confirm */}
         <Dialog
+          sx={{ backgroundColor: theme.palette.primary[700] }}
           open={open}
           onClose={() => setOpen(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+          <DialogTitle>{'Bạn có chắc chắn sẽ xoá sản phẩm ?'}</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Let Google help apps determine location. This means sending anonymous location data to
-              Google, even when no apps are running.
+            <DialogContentText>
+              Sẽ không thể khôi phục sau khi xoá, hãy chắc chắn về điều này
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpen(false)}>Disagree</Button>
-            <Button onClick={() => handleDelete(_id)} autoFocus>
-              Agree
+            <Button variant="contained" onClick={() => setOpen(false)}>
+              Huỷ
+            </Button>
+            <Button variant="outlined" color="error" onClick={() => handleDelete(_id)} autoFocus>
+              Xoá
             </Button>
           </DialogActions>
         </Dialog>
+        {/* Dialog Confirm */}
       </CardContent>
       <CardActions>
         <Button
@@ -140,8 +142,15 @@ const Products = () => {
   const isNonMobile = useMediaQuery('(min-width: 1000px)')
   const [isOpen, setIsOpen] = useState(false)
   const [dataDetail, setDataDetail] = useState()
+  const [notify, setNotify] = useState({ isOpen: false, message: '', type: 'info' })
+
   const handleDeleteProduct = (a) => {
     deleteProduct(a)
+    setNotify({
+      isOpen: true,
+      message: 'Xoá thành công',
+      type: 'error',
+    })
     refetch()
   }
   const handleEditProduct = (a) => {
@@ -151,21 +160,25 @@ const Products = () => {
   }
   const handleOpenCreate = () => {
     setDataDetail(null)
-    console.log(dataDetail)
     setIsOpen(!isOpen)
   }
+
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="PRODUCTS" subtitle="See your list of products." />
       <Button sx={{ margin: '1rem 0' }} variant="contained" onClick={handleOpenCreate}>
         Tạo sản phẩm mới
       </Button>
+      <Notification notify={notify} setNotify={setNotify} />
+
       <ProductForm
         dataToEdit={dataDetail}
         isOpen={isOpen}
         setIsOpen={handleOpenCreate}
         onSubmit={() => refetch()}
+        setNotify={setNotify}
       />
+
       {data || !isLoading ? (
         <Box
           mt="20px"

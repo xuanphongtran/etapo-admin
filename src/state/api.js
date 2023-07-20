@@ -14,6 +14,7 @@ export const api = createApi({
     'Admins',
     'Performance',
     'Dashboard',
+    'Categories',
   ],
   endpoints: (build) => ({
     getUser: build.query({
@@ -23,6 +24,10 @@ export const api = createApi({
     getProducts: build.query({
       query: () => ({ url: 'client/products', method: 'GET' }),
       providesTags: ['Products'],
+    }),
+    getCategories: build.query({
+      query: () => 'client/categories',
+      providesTags: ['Categories'],
     }),
     getCustomers: build.query({
       query: () => 'client/customers',
@@ -71,6 +76,7 @@ export const api = createApi({
 
 export const {
   useGetUserQuery,
+  useGetCategoriesQuery,
   useGetProductsQuery,
   useGetCustomersQuery,
   useGetTransactionsQuery,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import {
   TextField,
   Button,
@@ -12,19 +12,26 @@ import {
   InputLabel,
   OutlinedInput,
   InputAdornment,
+  MenuItem,
+  Select,
 } from '@mui/material'
-import { useCreateProductMutation, useUpdateProductMutation } from 'state/api'
-const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit }) => {
+import {
+  useCreateProductMutation,
+  useGetCategoriesQuery,
+  useUpdateProductMutation,
+} from 'state/api'
+const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit, setNotify }) => {
   const theme = useTheme()
   const [uploadedImages, setUploadedImages] = useState([])
   const [createProduct, create] = useCreateProductMutation()
   const [updateProduct, update] = useUpdateProductMutation()
-
+  const { data, isLoading, error } = useGetCategoriesQuery()
   const {
     register,
     handleSubmit,
     setValue,
     setFocus,
+    control,
     reset,
     formState: { errors },
   } = useForm()
@@ -39,12 +46,23 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit }) => {
   }, [isOpen])
 
   const handleCreate = (data) => {
-    if (!dataToEdit) {
-      createProduct(data)
-    } else {
-      updateProduct(dataToEdit._id, data)
-    }
-    setIsOpen(false)
+    // if (!dataToEdit) {
+    //   createProduct(data)
+    //   setNotify({
+    //     isOpen: true,
+    //     message: 'Tạo mới thành công',
+    //     type: 'success',
+    //   })
+    // } else {
+    //   updateProduct(dataToEdit._id, data)
+    //   setNotify({
+    //     isOpen: true,
+    //     message: 'Cập nhập thành công',
+    //     type: 'success',
+    //   })
+    // }
+    // setIsOpen(false)
+    console.log(data)
     onSubmit()
   }
 
@@ -78,7 +96,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit }) => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <TextField
-                sx={{ width: '100%', marginBottom: '1rem' }}
+                sx={{ width: '100%', marginBottom: '1rem', color: theme.palette.secondary[100] }}
                 label="Tên sản phẩm"
                 {...register('name', { required: true })}
                 error={errors.name ? true : false}
@@ -93,15 +111,51 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit }) => {
                 {...register('description')}
               />
 
-              <FormControl sx={{ width: '100%', marginBottom: '1rem' }} fullWidth>
-                <InputLabel htmlFor="outlined-adornment-amount">Price</InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-amount"
-                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                  label="Amount"
-                  {...register('price')}
+              <TextField
+                sx={{ width: '100%', marginBottom: '1rem' }}
+                variant="outlined"
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">đ</InputAdornment>,
+                }}
+                label="Giá"
+                error={errors.price ? true : false}
+                {...register('price')}
+                helperText={errors.price ? 'Vui lòng nhập giá sản phẩm' : ''}
+              />
+
+              <TextField
+                sx={{ width: '100%', marginBottom: '1rem' }}
+                variant="outlined"
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                }}
+                label="Giảm giá"
+                {...register('discount')}
+              />
+
+              {isLoading ? (
+                <div>Loading...</div>
+              ) : error ? (
+                <div>Error: {error.message}</div>
+              ) : (
+                <Controller
+                  name="category"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <FormControl fullWidth variant="outlined">
+                      <InputLabel htmlFor="select-option">Select an option</InputLabel>
+                      <Select {...field} label="Select an option" id="select-option">
+                        {data.map((option) => (
+                          <MenuItem key={option._id} value={option._id}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
                 />
-              </FormControl>
+              )}
             </Grid>
             {/* <Grid item xs={6}>
               <input
