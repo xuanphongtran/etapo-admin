@@ -114,11 +114,13 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     setImages([...images, URL.createObjectURL(ev.target.files[0])])
     setFiles([...files, ev.target.files[0]])
   }
+
   const gender = [
     { _id: 1, name: 'Nam' },
     { _id: 2, name: 'Nữ' },
     { _id: 3, name: 'Cặp đôi' },
   ]
+
   return (
     <Box
       sx={{
@@ -212,10 +214,17 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                   <TextField
                     key={index}
                     sx={{ width: '100%', marginBottom: '1rem' }}
-                    label={property}
+                    label={property.name}
+                    select
                     defaultValue=""
-                    onChange={(ev) => handlePropertyChange(ev.target.value, property)}
-                  />
+                    onChange={(ev) => handlePropertyChange(ev.target.value, property.name)}
+                  >
+                    {property?.values?.map((option, index) => (
+                      <MenuItem key={index} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 ))}
             </Grid>
             <Grid sx={{ alignItems: 'center' }} item xs={6}>
