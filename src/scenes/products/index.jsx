@@ -138,7 +138,7 @@ const Product = ({
 
 const Products = () => {
   const { data, isLoading, refetch } = useGetProductsQuery()
-  const [deleteProduct, re] = useDeleteProductMutation()
+  const [deleteProduct] = useDeleteProductMutation()
   const isNonMobile = useMediaQuery('(min-width: 1000px)')
   const [isOpen, setIsOpen] = useState(false)
   const [dataDetail, setDataDetail] = useState()
@@ -175,7 +175,7 @@ const Products = () => {
         dataToEdit={dataDetail}
         isOpen={isOpen}
         setIsOpen={handleOpenCreate}
-        onSubmit={() => refetch()}
+        refetch={() => refetch()}
         setNotify={setNotify}
       />
 

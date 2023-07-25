@@ -1,31 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import {
   TextField,
   Button,
   Box,
   useTheme,
-  Card,
-  CardMedia,
   Grid,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
   InputAdornment,
   MenuItem,
-  Select,
+  ImageList,
+  ImageListItem,
 } from '@mui/material'
 import {
   useCreateProductMutation,
   useGetCategoriesQuery,
   useUpdateProductMutation,
 } from 'state/api'
-const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit, setNotify }) => {
-  const theme = useTheme()
-  const [uploadedImages, setUploadedImages] = useState([])
-  const [createProduct, create] = useCreateProductMutation()
-  const [updateProduct, update] = useUpdateProductMutation()
-  const { data, isLoading, error } = useGetCategoriesQuery()
+import axios from 'axios'
+import { productsForm } from 'constants/form'
+const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const {
     register,
     handleSubmit,
@@ -35,6 +28,15 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit, setNotify }) => 
     reset,
     formState: { errors },
   } = useForm()
+  const theme = useTheme()
+  const [createProduct, createError] = useCreateProductMutation()
+  const [updateProduct, updateError] = useUpdateProductMutation()
+  const { data, isLoading } = useGetCategoriesQuery()
+  const [category, setCategory] = useState('')
+  const [propertiesToFill, setPropertiesToFill] = useState([])
+  const [productProperties, setProductProperties] = useState({})
+  const [images, setImages] = useState([])
+  const [files, setFiles] = useState([])
 
   useEffect(() => {
     if (dataToEdit) {
@@ -42,39 +44,77 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit, setNotify }) => 
       setValue('name', dataToEdit.name)
       setValue('price', dataToEdit.price)
       setValue('description', dataToEdit.description)
-    } else reset()
+      setValue('category', dataToEdit.category)
+      setValue('discount', dataToEdit.discount)
+    } else reset(productsForm)
   }, [isOpen])
 
-  const handleCreate = (data) => {
-    // if (!dataToEdit) {
-    //   createProduct(data)
-    //   setNotify({
-    //     isOpen: true,
-    //     message: 'Tạo mới thành công',
-    //     type: 'success',
-    //   })
-    // } else {
-    //   updateProduct(dataToEdit._id, data)
-    //   setNotify({
-    //     isOpen: true,
-    //     message: 'Cập nhập thành công',
-    //     type: 'success',
-    //   })
-    // }
-    // setIsOpen(false)
-    console.log(data)
-    onSubmit()
+  const handleCreate = async (data) => {
+    const imagesUrl = []
+    if (files?.length > 0) {
+      const data = new FormData()
+      for (const file of files) {
+        data.append('file', file)
+        data.append('upload_preset', 'nbrwjjys')
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,
+          data,
+        )
+        imagesUrl.push(response.data.url)
+      }
+    }
+    const newData = {
+      ...data,
+      images: imagesUrl,
+      properties: productProperties,
+    }
+    if (!dataToEdit) {
+      createProduct(newData)
+      setNotify({
+        isOpen: true,
+        message: 'Tạo mới thành công',
+        type: 'success',
+      })
+    } else {
+      const id = dataToEdit._id
+      updateProduct({ ...newData, id })
+      setNotify({
+        isOpen: true,
+        message: 'Cập nhập thành công',
+        type: 'success',
+      })
+    }
+    setIsOpen(false)
+    console.log(newData)
+    refetch()
   }
 
   if (!isOpen) {
     return null
   }
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files)
-    const images = files.map((file) => URL.createObjectURL(file))
-    setUploadedImages(images)
+
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value)
+    if (data.length > 0 && event.target.value) {
+      const cat = data.find((e) => e._id === event.target.value)
+      setPropertiesToFill(cat.properties)
+      if (cat?.parent?._id) {
+        setPropertiesToFill([...cat.parent.properties, ...cat.properties])
+      }
+    }
   }
 
+  const handlePropertyChange = (value, name) => {
+    setProductProperties((prev) => {
+      const newProductProps = { ...prev }
+      newProductProps[name] = value
+      return newProductProps
+    })
+  }
+  const handleFileChange = (ev) => {
+    setImages([...images, URL.createObjectURL(ev.target.files[0])])
+    setFiles([...files, ev.target.files[0]])
+  }
   return (
     <Box
       sx={{
@@ -96,7 +136,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit, setNotify }) => 
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <TextField
-                sx={{ width: '100%', marginBottom: '1rem', color: theme.palette.secondary[100] }}
+                sx={{ width: '100%', marginBottom: '1rem' }}
                 label="Tên sản phẩm"
                 {...register('name', { required: true })}
                 error={errors.name ? true : false}
@@ -135,56 +175,91 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, onSubmit, setNotify }) => 
 
               {isLoading ? (
                 <div>Loading...</div>
-              ) : error ? (
-                <div>Error: {error.message}</div>
               ) : (
-                <Controller
-                  name="category"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <FormControl fullWidth variant="outlined">
-                      <InputLabel htmlFor="select-option">Select an option</InputLabel>
-                      <Select {...field} label="Select an option" id="select-option">
-                        {data.map((option) => (
-                          <MenuItem key={option._id} value={option._id}>
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  )}
-                />
+                <TextField
+                  sx={{ width: '100%', marginBottom: '1rem' }}
+                  label="Danh mục"
+                  select
+                  value={category}
+                  {...register('category')}
+                  onChange={handleCategoryChange}
+                >
+                  {data.map((option, index) => (
+                    <MenuItem key={index} value={option._id}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
               )}
+              {propertiesToFill.length > 0 &&
+                propertiesToFill.map((property, index) => (
+                  <TextField
+                    key={index}
+                    sx={{ width: '100%', marginBottom: '1rem' }}
+                    label={property.name}
+                    select
+                    defaultValue=""
+                    onChange={(ev) => handlePropertyChange(ev.target.value, property.name)}
+                  >
+                    {property?.values?.map((option, index) => (
+                      <MenuItem key={index} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                ))}
             </Grid>
-            {/* <Grid item xs={6}>
+            <Grid sx={{ alignItems: 'center' }} item xs={6}>
               <input
                 type="file"
                 accept="image/*"
-                {...register('image', { required: true })}
                 multiple
                 style={{ display: 'none' }}
                 id="image-input"
-                onChange={handleImageUpload}
+                onChange={handleFileChange}
               />
               <label htmlFor="image-input">
                 <Button component="span" variant="contained" color="primary">
                   Upload Images
                 </Button>
               </label>
-              {errors.image && <p>Image is required</p>}
-
-              {uploadedImages.length > 0 && (
-                <div>
-                  <h3>Uploaded Images:</h3>
-                  {uploadedImages.map((image, index) => (
-                    <Card key={index}>
-                      <CardMedia component="img" image={image} />
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </Grid> */}
+              <ImageList
+                sx={{
+                  'backgroundColor': theme.palette.primary[600],
+                  'width': '100%',
+                  'height': 342,
+                  'borderRadius': '5px',
+                  '&::-webkit-scrollbar': {
+                    height: '6px',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: theme.palette.secondary[300],
+                  },
+                }}
+                variant="masonry"
+                rowHeight={163}
+              >
+                {images.map((item, index) => (
+                  <ImageListItem
+                    key={index}
+                    sx={{
+                      '.MuiImageListItem-img': {
+                        border: 'solid',
+                        borderRadius: '5px',
+                        objectFit: 'contain',
+                      },
+                    }}
+                  >
+                    <img
+                      src={`${item}`}
+                      srcSet={`${item}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                      alt="1"
+                      loading="lazy"
+                    />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            </Grid>
             <Grid item xs={12} sx={{ justifyContent: 'space-around', display: 'flex' }}>
               <Button type="submit" variant="contained">
                 Tạo sản phẩm

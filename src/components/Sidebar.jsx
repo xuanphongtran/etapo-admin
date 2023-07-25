@@ -22,7 +22,7 @@ import {
   CalendarMonthOutlined,
   ChevronLeft,
   ChevronRightOutlined,
-  Groups2Outlined,
+  CategoryOutlined,
   HomeOutlined,
   PieChartOutline,
   PointOfSaleOutlined,
@@ -35,6 +35,7 @@ import {
 } from '@mui/icons-material'
 const navItems = [
   {
+    label: 'Trang chủ',
     text: 'Dashboard',
     icon: <HomeOutlined />,
   },
@@ -43,18 +44,22 @@ const navItems = [
     icon: null,
   },
   {
+    label: 'Sản phẩm',
     text: 'Products',
     icon: <ShoppingCartOutlined />,
   },
   {
-    text: 'Customers',
-    icon: <Groups2Outlined />,
+    label: 'Danh mục ',
+    text: 'Categories',
+    icon: <CategoryOutlined />,
   },
   {
-    text: 'Transactions',
+    label: 'Đơn hàng',
+    text: 'Orders',
     icon: <ReceiptLongOutlined />,
   },
   {
+    label: 'Trang chủ',
     text: 'Geography',
     icon: <PublicOutlined />,
   },
@@ -63,18 +68,22 @@ const navItems = [
     icon: null,
   },
   {
+    label: 'Trang chủ',
     text: 'Overview',
     icon: <PointOfSaleOutlined />,
   },
   {
+    label: 'Trang chủ',
     text: 'Daily',
     icon: <TodayOutlined />,
   },
   {
+    label: 'Trang chủ',
     text: 'Monthly',
     icon: <CalendarMonthOutlined />,
   },
   {
+    label: 'Trang chủ',
     text: 'Breakdown',
     icon: <PieChartOutline />,
   },
@@ -83,10 +92,12 @@ const navItems = [
     icon: null,
   },
   {
+    label: 'Trang chủ',
     text: 'Admin',
     icon: <AdminPanelSettingsOutlined />,
   },
   {
+    label: 'Trang chủ',
     text: 'Performance',
     icon: <TrendingUpOutlined />,
   },
@@ -132,7 +143,7 @@ const Sidebar = ({ user, drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobi
               <FlexBetween color={theme.palette.secondary.main}>
                 <Box display="flex" alignItems="center" gap="0.5rem">
                   <Typography variant="h4" fontWeight="bold">
-                    ECOMVISION
+                    E-TAPO ADMIN
                   </Typography>
                 </Box>
                 {!isNonMobile && (
@@ -143,7 +154,7 @@ const Sidebar = ({ user, drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobi
               </FlexBetween>
             </Box>
             <List>
-              {navItems.map(({ text, icon }) => {
+              {navItems.map(({ text, icon, label }) => {
                 if (!icon) {
                   return (
                     <Typography key={text} sx={{ m: '2.25rem 0 1rem 3rem' }}>
@@ -180,7 +191,7 @@ const Sidebar = ({ user, drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobi
                       >
                         {icon}
                       </ListItemIcon>
-                      <ListItemText primary={text} />
+                      <ListItemText primary={label} />
                       {active === lcText && <ChevronRightOutlined sx={{ ml: 'auto' }} />}
                     </ListItemButton>
                   </ListItem>

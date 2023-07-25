@@ -8,7 +8,7 @@ export const api = createApi({
     'User',
     'Products',
     'Customers',
-    'Transactions',
+    'Orders',
     'Geography',
     'Sales',
     'Admins',
@@ -33,13 +33,13 @@ export const api = createApi({
       query: () => 'client/customers',
       providesTags: ['Customers'],
     }),
-    getTransactions: build.query({
+    getOrders: build.query({
       query: ({ page, pageSize, sort, search }) => ({
-        url: 'client/transactions',
+        url: 'client/orders',
         method: 'GET',
         params: { page, pageSize, sort, search },
       }),
-      providesTags: ['Transactions'],
+      providesTags: ['Orders'],
     }),
     getGeography: build.query({
       query: () => 'client/geography',
@@ -65,11 +65,29 @@ export const api = createApi({
       query: (data) => ({ url: 'client/products', method: 'POST', body: data }),
       invalidatesTags: ['Post'],
     }),
+    updateProduct: build.mutation({
+      query: (updatePostData) => {
+        const { id, ...data } = updatePostData
+        return { url: `client/products/${id}`, method: 'PUT', body: data }
+      },
+      invalidatesTags: ['Post'],
+    }),
     deleteProduct: build.mutation({
       query: (id) => ({ url: `client/products/${id}`, method: 'DELETE' }),
     }),
-    updateProduct: build.mutation({
-      query: (id, data) => ({ url: `client/products/${id}`, method: 'PUT', body: data }),
+    createCategory: build.mutation({
+      query: (data) => ({ url: 'client/categories', method: 'POST', body: data }),
+      invalidatesTags: ['Post'],
+    }),
+    updateCategory: build.mutation({
+      query: (updatePostData) => {
+        const { id, ...data } = updatePostData
+        return { url: `client/categories/${id}`, method: 'PUT', body: data }
+      },
+      invalidatesTags: ['Post'],
+    }),
+    deleteCategory: build.mutation({
+      query: (id) => ({ url: `client/categories/${id}`, method: 'DELETE' }),
     }),
   }),
 })
@@ -79,13 +97,16 @@ export const {
   useGetCategoriesQuery,
   useGetProductsQuery,
   useGetCustomersQuery,
-  useGetTransactionsQuery,
+  useGetOrdersQuery,
   useGetGeographyQuery,
   useGetSalesQuery,
   useGetAdminsQuery,
   useGetUserPerformanceQuery,
   useGetDashboardQuery,
   useCreateProductMutation,
-  useDeleteProductMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
 } = api
