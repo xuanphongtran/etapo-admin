@@ -49,7 +49,7 @@ const navItems = [
     icon: <ShoppingCartOutlined />,
   },
   {
-    label: 'Danh mục ',
+    label: 'Thương Hiệu ',
     text: 'Categories',
     icon: <CategoryOutlined />,
   },

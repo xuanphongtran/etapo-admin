@@ -13,9 +13,9 @@ import {
 import { useDeleteCategoryMutation, useGetCategoriesQuery } from 'state/api'
 import Header from 'components/Header'
 import { DataGrid } from '@mui/x-data-grid'
-import CategotyForm from './createCategory'
 import Notification from 'components/dialog/Notification'
 import { columns } from './category.schema'
+import CategotyForm from './createCategory'
 
 const Categories = () => {
   const theme = useTheme()
@@ -90,10 +90,10 @@ const Categories = () => {
       <Header title="CATEGORIES" subtitle="List of Categories" />
       <Box m="1rem">
         <Button sx={{ marginRight: '1rem' }} variant="contained" onClick={handleOpenCreate}>
-          Tạo danh mục mới
+          Tạo Thương Hiệu mới
         </Button>
         <Button sx={{ marginRight: '1rem' }} variant="contained" onClick={handleUpdateCategory}>
-          Cập nhập danh mục
+          Cập nhập Thương Hiệu
         </Button>
         <Button
           sx={{ marginRight: '1rem' }}
@@ -101,7 +101,7 @@ const Categories = () => {
           color="error"
           onClick={handleDeleteCategory}
         >
-          Xoá danh mục
+          Xoá Thương Hiệu
         </Button>
         {/* Dialog Confirm */}
         <Dialog
@@ -109,7 +109,7 @@ const Categories = () => {
           open={openConfirm}
           onClose={() => setOpenConfirm(false)}
         >
-          <DialogTitle>{'Bạn có chắc chắn sẽ xoá danh mục ?'}</DialogTitle>
+          <DialogTitle>{'Bạn có chắc chắn sẽ xoá Thương Hiệu ?'}</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Sẽ không thể khôi phục sau khi xoá, hãy chắc chắn về điều này

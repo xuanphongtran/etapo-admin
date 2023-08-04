@@ -22,7 +22,6 @@ import {
 import { useDeleteProductMutation, useGetProductsQuery } from 'state/api'
 import Header from 'components/Header'
 import ProductForm from './createProduct'
-import { set } from 'react-hook-form'
 import Notification from 'components/dialog/Notification'
 
 const Product = ({
@@ -34,17 +33,29 @@ const Product = ({
   category,
   supply,
   stat,
+  properties,
   handleDeleteProduct,
   handleEditProduct,
 }) => {
   const theme = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
   const [open, setOpen] = useState(false)
-
   const handleDelete = (a) => {
     handleDeleteProduct(a)
     setOpen(false)
   }
+  const keyValueElements = []
+
+  for (const key in properties) {
+    if (properties.hasOwnProperty(key)) {
+      keyValueElements.push(
+        <Typography key={key}>
+          {key}: {properties[key]}
+        </Typography>,
+      )
+    }
+  }
+
   return (
     <Card
       sx={{
@@ -55,7 +66,7 @@ const Product = ({
     >
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color={theme.palette.secondary[700]} gutterBottom>
-          {category}
+          {_id}
         </Typography>
         <Typography variant="h5" component="div">
           {name}
@@ -126,10 +137,17 @@ const Product = ({
         }}
       >
         <CardContent>
-          <Typography>id: {_id}</Typography>
-          <Typography>Supply Left: {supply}</Typography>
+          <Typography>Category: {category}</Typography>
+          {properties &&
+            Object.keys(properties).forEach((key) => (
+              <Typography>
+                {key}: {properties[key]}
+              </Typography>
+            ))}
+          {keyValueElements}
+          {/* <Typography>Supply Left: {supply}</Typography>
           <Typography>Yearly Sales This Year: {stat.yearlySalesTotal}</Typography>
-          <Typography>Yearly Units Sold This Year: {stat.yearlyTotalSoldUnits}</Typography>
+          <Typography>Yearly Units Sold This Year: {stat.yearlyTotalSoldUnits}</Typography> */}
         </CardContent>
       </Collapse>
     </Card>
@@ -175,7 +193,7 @@ const Products = () => {
         dataToEdit={dataDetail}
         isOpen={isOpen}
         setIsOpen={handleOpenCreate}
-        refetch={() => refetch()}
+        refetch={refetch}
         setNotify={setNotify}
       />
 
@@ -191,21 +209,24 @@ const Products = () => {
             '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
           }}
         >
-          {data.map(({ _id, name, description, price, rating, category, supply, stat }) => (
-            <Product
-              key={_id}
-              _id={_id}
-              name={name}
-              description={description}
-              price={price}
-              rating={rating}
-              category={category}
-              supply={supply}
-              stat={stat}
-              handleDeleteProduct={handleDeleteProduct}
-              handleEditProduct={handleEditProduct}
-            />
-          ))}
+          {data.map(
+            ({ _id, name, description, price, rating, category, supply, stat, properties }) => (
+              <Product
+                key={_id}
+                _id={_id}
+                name={name}
+                description={description}
+                properties={properties}
+                price={price}
+                rating={rating}
+                category={category}
+                supply={supply}
+                stat={stat}
+                handleDeleteProduct={handleDeleteProduct}
+                handleEditProduct={handleEditProduct}
+              />
+            ),
+          )}
         </Box>
       ) : (
         <>Loading...</>

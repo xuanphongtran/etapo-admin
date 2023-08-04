@@ -24,7 +24,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     handleSubmit,
     setValue,
     setFocus,
-    control,
     reset,
     formState: { errors },
   } = useForm()
@@ -46,7 +45,10 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
       setValue('description', dataToEdit.description)
       setValue('category', dataToEdit.category)
       setValue('discount', dataToEdit.discount)
-    } else reset(productsForm)
+    } else {
+      reset(productsForm)
+      setCategory('')
+    }
   }, [isOpen])
 
   const handleCreate = async (data) => {
@@ -98,9 +100,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     if (data.length > 0 && event.target.value) {
       const cat = data.find((e) => e._id === event.target.value)
       setPropertiesToFill(cat.properties)
-      if (cat?.parent?._id) {
-        setPropertiesToFill([...cat.parent.properties, ...cat.properties])
-      }
     }
   }
 
@@ -115,6 +114,11 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     setImages([...images, URL.createObjectURL(ev.target.files[0])])
     setFiles([...files, ev.target.files[0]])
   }
+  const gender = [
+    { _id: 1, name: 'Nam' },
+    { _id: 2, name: 'Nữ' },
+    { _id: 3, name: 'Cặp đôi' },
+  ]
   return (
     <Box
       sx={{
@@ -158,8 +162,8 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                   endAdornment: <InputAdornment position="end">đ</InputAdornment>,
                 }}
                 label="Giá"
+                {...register('price', { required: true })}
                 error={errors.price ? true : false}
-                {...register('price')}
                 helperText={errors.price ? 'Vui lòng nhập giá sản phẩm' : ''}
               />
 
@@ -172,13 +176,25 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                 label="Giảm giá"
                 {...register('discount')}
               />
-
+              <TextField
+                sx={{ width: '100%', marginBottom: '1rem' }}
+                label="Giới tính "
+                select
+                defaultValue={dataToEdit ? dataToEdit.gender : ''}
+                {...register('gender')}
+              >
+                {gender.map((option, index) => (
+                  <MenuItem key={index} value={option._id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
               {isLoading ? (
                 <div>Loading...</div>
               ) : (
                 <TextField
                   sx={{ width: '100%', marginBottom: '1rem' }}
-                  label="Danh mục"
+                  label="Thương hiệu"
                   select
                   value={category}
                   {...register('category')}
@@ -196,17 +212,10 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                   <TextField
                     key={index}
                     sx={{ width: '100%', marginBottom: '1rem' }}
-                    label={property.name}
-                    select
+                    label={property}
                     defaultValue=""
-                    onChange={(ev) => handlePropertyChange(ev.target.value, property.name)}
-                  >
-                    {property?.values?.map((option, index) => (
-                      <MenuItem key={index} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    onChange={(ev) => handlePropertyChange(ev.target.value, property)}
+                  />
                 ))}
             </Grid>
             <Grid sx={{ alignItems: 'center' }} item xs={6}>

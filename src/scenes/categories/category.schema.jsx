@@ -3,30 +3,23 @@ import React from 'react'
 export const columns = [
   {
     field: '_id',
-    headerName: 'ID',
+    headerName: 'Số Hiệu Sản Phẩm',
     flex: 1,
   },
   {
     field: 'name',
-    headerName: 'Name',
+    headerName: 'Tên sản phẩm',
     flex: 0.5,
-  },
-
-  {
-    field: 'parent',
-    headerName: 'Parent',
-    flex: 0.5,
-    renderCell: (params) => params.row.parent?.name,
   },
   {
     field: 'list',
-    headerName: 'Properties',
+    headerName: 'Chi tiết sản phẩm',
     flex: 1,
     sortable: false,
     renderCell: (params) =>
-      params.row.properties?.map(({ name }) => (
+      params.row.properties?.map((a) => (
         <>
-          {name}
+          {a}
           <br />
         </>
       )),
