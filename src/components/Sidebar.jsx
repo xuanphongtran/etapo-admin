@@ -32,6 +32,7 @@ import {
   ShoppingCartOutlined,
   TodayOutlined,
   TrendingUpOutlined,
+  BrandingWatermarkOutlined,
 } from '@mui/icons-material'
 const navItems = [
   {
@@ -49,9 +50,14 @@ const navItems = [
     icon: <ShoppingCartOutlined />,
   },
   {
-    label: 'Thương Hiệu ',
+    label: 'Danh mục ',
     text: 'Categories',
     icon: <CategoryOutlined />,
+  },
+  {
+    label: 'Thương hiệu ',
+    text: 'Brands',
+    icon: <BrandingWatermarkOutlined />,
   },
   {
     label: 'Đơn hàng',

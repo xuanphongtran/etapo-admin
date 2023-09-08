@@ -17,6 +17,7 @@ import Admin from 'scenes/admin'
 import Performance from 'scenes/performance'
 import Orders from 'scenes/orders'
 import Categories from 'scenes/categories'
+import Brands from 'scenes/brands'
 
 function App() {
   const mode = useSelector((state) => state.global.mode)
@@ -33,6 +34,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/products" element={<Products />} />
               <Route path="/categories" element={<Categories />} />
+              <Route path="/brands" element={<Brands />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/geography" element={<Geography />} />
               <Route path="/overview" element={<Overview />} />

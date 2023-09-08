@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { TextField, Button, Box, useTheme, Grid, MenuItem } from '@mui/material'
-import { useCreateCategoryMutation, useUpdateCategoryMutation } from 'state/api'
-const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
+import { useUpdateBrandMutation } from 'state/api'
+const BrandForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const {
     register,
     handleSubmit,
@@ -12,8 +12,8 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
     formState: { errors },
   } = useForm()
   const theme = useTheme()
-  const [createCategory, createError] = useCreateCategoryMutation()
-  const [updateCategory, updateError] = useUpdateCategoryMutation()
+  const [createBrand, createError] = useCreateBrandMutation()
+  const [updateBrand, updateError] = useUpdateBrandMutation()
   // const { data, isLoading } = useGetCategoriesQuery()
   const [properties, setProperties] = useState([])
 
@@ -33,7 +33,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
   const handleCreate = (data) => {
     const newData = { ...data, properties }
     if (!dataToEdit) {
-      createCategory(newData)
+      createBrand(newData)
       setNotify({
         isOpen: true,
         message: 'Tạo mới thành công',
@@ -42,7 +42,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
       refetch()
     } else {
       const id = dataToEdit._id
-      updateCategory({ id, ...newData })
+      updateBrand({ id, ...newData })
       setNotify({
         isOpen: true,
         message: 'Cập nhập thành công',
@@ -96,16 +96,16 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
           boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
         }}
       >
-        <h2>Tạo danh mục sản phẩm mới</h2>
+        <h2>Tạo Thương Hiệu mới</h2>
         <form onSubmit={handleSubmit(handleCreate)}>
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12}>
               <TextField
                 sx={{ width: '100%', marginBottom: '1rem' }}
-                label="Tên danh mục"
+                label="Tên Thương Hiệu"
                 {...register('name', { required: true })}
                 error={errors.name ? true : false}
-                helperText={errors.name ? 'Vui lòng nhập tên danh mục' : ''}
+                helperText={errors.name ? 'Vui lòng nhập tên Thương Hiệu' : ''}
               />
             </Grid>
             {/* <Button sx={{ margin: '0.5rem 0' }} variant="contained" onClick={addProperty}>
@@ -137,7 +137,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
               ))} */}
             <Grid item xs={12} sx={{ justifyContent: 'space-around', display: 'flex' }}>
               <Button type="submit" variant="contained">
-                Tạo danh mục sản phẩm
+                Tạo danh mục thương hiệu
               </Button>
               <Button onClick={() => setIsOpen(false)} variant="contained">
                 Huỷ
@@ -150,4 +150,4 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
   )
 }
 
-export default CategotyForm
+export default BrandForm

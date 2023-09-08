@@ -10,17 +10,17 @@ import {
   DialogTitle,
   useTheme,
 } from '@mui/material'
-import { useDeleteCategoryMutation, useGetCategoriesQuery } from 'state/api'
 import Header from 'components/Header'
 import { DataGrid } from '@mui/x-data-grid'
 import Notification from 'components/dialog/Notification'
-import { columns } from './category.schema'
-import CategotyForm from './createCategory'
+import { columns } from './brand.schema'
+import CategotyForm from './createBrand'
+import { useDeleteBrandMutation, useGetBrandsQuery } from 'state/api'
 
-const Categories = () => {
+const Brands = () => {
   const theme = useTheme()
-  const { data, isLoading, refetch } = useGetCategoriesQuery()
-  const [deleteCategory] = useDeleteCategoryMutation()
+  const { data, isLoading, refetch } = useGetBrandsQuery()
+  const [deleteBrand] = useDeleteBrandMutation()
   const [dataDetail, setDataDetail] = useState()
   const [isOpen, setIsOpen] = useState(false)
   const [openConfirm, setOpenConfirm] = useState(false)
@@ -69,7 +69,7 @@ const Categories = () => {
     }
   }
   const handleConfirmDelete = () => {
-    deleteCategory(selectedRows[0])
+    deleteBrand(selectedRows[0])
     setNotify({
       isOpen: true,
       message: 'Xoá thành công',
@@ -87,13 +87,13 @@ const Categories = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="Danh mục sản phẩm" />
+      <Header title="Thương Hiệu" />
       <Box m="1rem 0">
         <Button sx={{ marginRight: '1rem' }} variant="contained" onClick={handleOpenCreate}>
-          Tạo danh mục mới
+          Tạo Thương Hiệu Mới
         </Button>
         <Button sx={{ marginRight: '1rem' }} variant="contained" onClick={handleUpdateCategory}>
-          Cập nhập danh mục
+          Cập nhập Thương Hiệu
         </Button>
         <Button
           sx={{ marginRight: '1rem' }}
@@ -101,7 +101,7 @@ const Categories = () => {
           color="error"
           onClick={handleDeleteCategory}
         >
-          Xoá danh mục
+          Xoá Thương Hiệu
         </Button>
         {/* Dialog Confirm */}
         <Dialog
@@ -135,7 +135,7 @@ const Categories = () => {
         refetch={() => refetch()}
         setNotify={setNotify}
       />
-      <Header subtitle="Danh sách danh mục sản phẩm" />
+      <Header subtitle="Danh sách thương hiệu" />
 
       <Box
         mt="20px"
@@ -183,4 +183,4 @@ const Categories = () => {
   )
 }
 
-export default Categories
+export default Brands

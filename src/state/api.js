@@ -15,6 +15,7 @@ export const api = createApi({
     'Performance',
     'Dashboard',
     'Categories',
+    'Brands',
   ],
   endpoints: (build) => ({
     getUser: build.query({
@@ -28,6 +29,10 @@ export const api = createApi({
     getCategories: build.query({
       query: () => 'client/categories',
       providesTags: ['Categories'],
+    }),
+    getBrands: build.query({
+      query: () => 'client/brands',
+      providesTags: ['Brands'],
     }),
     getCustomers: build.query({
       query: () => 'client/customers',
@@ -89,12 +94,27 @@ export const api = createApi({
     deleteCategory: build.mutation({
       query: (id) => ({ url: `client/categories/${id}`, method: 'DELETE' }),
     }),
+    createBrand: build.mutation({
+      query: (data) => ({ url: 'client/brands', method: 'POST', body: data }),
+      invalidatesTags: ['Post'],
+    }),
+    updateBrand: build.mutation({
+      query: (updatePostData) => {
+        const { id, ...data } = updatePostData
+        return { url: `client/brands/${id}`, method: 'PUT', body: data }
+      },
+      invalidatesTags: ['Post'],
+    }),
+    deleteBrand: build.mutation({
+      query: (id) => ({ url: `client/brands/${id}`, method: 'DELETE' }),
+    }),
   }),
 })
 
 export const {
   useGetUserQuery,
   useGetCategoriesQuery,
+  useGetBrandsQuery,
   useGetProductsQuery,
   useGetCustomersQuery,
   useGetOrdersQuery,
@@ -109,4 +129,7 @@ export const {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useCreateBrandMutation,
+  useUpdateBrandMutation,
+  useDeleteBrandMutation,
 } = api
