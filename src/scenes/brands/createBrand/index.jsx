@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { TextField, Button, Box, useTheme, Grid, MenuItem } from '@mui/material'
-import { useUpdateBrandMutation } from 'state/api'
+import { useCreateBrandMutation, useUpdateBrandMutation } from 'state/api'
 const BrandForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const {
     register,
@@ -108,6 +108,7 @@ const BrandForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                 helperText={errors.name ? 'Vui lòng nhập tên Thương Hiệu' : ''}
               />
             </Grid>
+
             {/* <Button sx={{ margin: '0.5rem 0' }} variant="contained" onClick={addProperty}>
               Thêm thuộc tính
             </Button>

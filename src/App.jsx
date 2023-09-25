@@ -18,10 +18,11 @@ import Performance from 'scenes/performance'
 import Orders from 'scenes/orders'
 import Categories from 'scenes/categories'
 import Brands from 'scenes/brands'
+import { viVN } from '@mui/material/locale'
 
 function App() {
   const mode = useSelector((state) => state.global.mode)
-  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
+  const theme = useMemo(() => createTheme(themeSettings(mode), viVN), [mode])
 
   return (
     <div className="app">

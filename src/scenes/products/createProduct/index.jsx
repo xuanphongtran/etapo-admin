@@ -13,11 +13,13 @@ import {
 } from '@mui/material'
 import {
   useCreateProductMutation,
+  useGetBrandsQuery,
   useGetCategoriesQuery,
   useUpdateProductMutation,
 } from 'state/api'
 import axios from 'axios'
 import { productsForm } from 'constants/form'
+import { NumericFormatCustom } from 'components/NumericFormatCustom'
 const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const {
     register,
@@ -30,10 +32,11 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const theme = useTheme()
   const [createProduct, createError] = useCreateProductMutation()
   const [updateProduct, updateError] = useUpdateProductMutation()
-  const { data, isLoading } = useGetCategoriesQuery()
-  const [category, setCategory] = useState('')
-  const [propertiesToFill, setPropertiesToFill] = useState([])
-  const [productProperties, setProductProperties] = useState({})
+  const { data: categoryData, isLoading: isLoadingCate } = useGetCategoriesQuery()
+  const { data: brandData, isLoading: isLoadingBrand } = useGetBrandsQuery()
+  // const [category, setCategory] = useState('')
+  // const [propertiesToFill, setPropertiesToFill] = useState([])
+  // const [productProperties, setProductProperties] = useState({})
   const [images, setImages] = useState([])
   const [files, setFiles] = useState([])
 
@@ -47,7 +50,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
       setValue('discount', dataToEdit.discount)
     } else {
       reset(productsForm)
-      setCategory('')
+      // setCategory('')
     }
   }, [isOpen])
 
@@ -68,7 +71,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     const newData = {
       ...data,
       images: imagesUrl,
-      properties: productProperties,
+      // properties: productProperties,
     }
     if (!dataToEdit) {
       createProduct(newData)
@@ -95,21 +98,21 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     return null
   }
 
-  const handleCategoryChange = (event) => {
-    setCategory(event.target.value)
-    if (data.length > 0 && event.target.value) {
-      const cat = data.find((e) => e._id === event.target.value)
-      setPropertiesToFill(cat.properties)
-    }
-  }
+  // const handleCategoryChange = (event) => {
+  //   setCategory(event.target.value)
+  //   if (data.length > 0 && event.target.value) {
+  //     const cat = data.find((e) => e._id === event.target.value)
+  //     setPropertiesToFill(cat.properties)
+  //   }
+  // }
 
-  const handlePropertyChange = (value, name) => {
-    setProductProperties((prev) => {
-      const newProductProps = { ...prev }
-      newProductProps[name] = value
-      return newProductProps
-    })
-  }
+  // const handlePropertyChange = (value, name) => {
+  //   setProductProperties((prev) => {
+  //     const newProductProps = { ...prev }
+  //     newProductProps[name] = value
+  //     return newProductProps
+  //   })
+  // }
   const handleFileChange = (ev) => {
     setImages([...images, URL.createObjectURL(ev.target.files[0])])
     setFiles([...files, ev.target.files[0]])
@@ -161,6 +164,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                 sx={{ width: '100%', marginBottom: '1rem' }}
                 variant="outlined"
                 InputProps={{
+                  inputComponent: NumericFormatCustom,
                   endAdornment: <InputAdornment position="end">đ</InputAdornment>,
                 }}
                 label="Giá"
@@ -178,38 +182,42 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                 label="Giảm giá"
                 {...register('discount')}
               />
-              <TextField
-                sx={{ width: '100%', marginBottom: '1rem' }}
-                label="Giới tính "
-                select
-                defaultValue={dataToEdit ? dataToEdit.gender : ''}
-                {...register('gender')}
-              >
-                {gender.map((option, index) => (
-                  <MenuItem key={index} value={option._id}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              {isLoading ? (
+              {isLoadingBrand ? (
                 <div>Loading...</div>
               ) : (
                 <TextField
                   sx={{ width: '100%', marginBottom: '1rem' }}
                   label="Thương hiệu"
                   select
-                  value={category}
-                  {...register('category')}
-                  onChange={handleCategoryChange}
+                  defaultValue={dataToEdit ? dataToEdit.brand : ''}
+                  {...register('brand')}
                 >
-                  {data.map((option, index) => (
+                  {brandData.map((option, index) => (
                     <MenuItem key={index} value={option._id}>
                       {option.name}
                     </MenuItem>
                   ))}
                 </TextField>
               )}
-              {propertiesToFill.length > 0 &&
+              {isLoadingCate ? (
+                <div>Loading...</div>
+              ) : (
+                <TextField
+                  sx={{ width: '100%', marginBottom: '1rem' }}
+                  label="Danh mục"
+                  select
+                  defaultValue={dataToEdit ? dataToEdit.category : ''}
+                  {...register('category')}
+                  // onChange={handleCategoryChange}
+                >
+                  {categoryData.map((option, index) => (
+                    <MenuItem key={index} value={option._id}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+              {/* {propertiesToFill.length > 0 &&
                 propertiesToFill.map((property, index) => (
                   <TextField
                     key={index}
@@ -225,7 +233,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                       </MenuItem>
                     ))}
                   </TextField>
-                ))}
+                ))} */}
             </Grid>
             <Grid sx={{ alignItems: 'center' }} item xs={6}>
               <input

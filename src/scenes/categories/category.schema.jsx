@@ -9,26 +9,26 @@ export const columns = [
   {
     field: 'name',
     headerName: 'Name',
-    flex: 0.5,
+    flex: 1,
   },
 
   {
     field: 'parent',
     headerName: 'Parent',
-    flex: 0.5,
-    renderCell: (params) => params.row.parent?.name,
-  },
-  {
-    field: 'list',
-    headerName: 'Properties',
     flex: 1,
-    sortable: false,
-    renderCell: (params) =>
-      params.row.properties?.map(({ name }) => (
-        <>
-          {name}
-          <br />
-        </>
-      )),
+    renderCell: (params) => params.row.parent,
   },
+  // {
+  //   field: 'list',
+  //   headerName: 'Properties',
+  //   flex: 1,
+  //   sortable: false,
+  //   renderCell: (params) =>
+  //     params.row.properties?.map(({ name }) => (
+  //       <>
+  //         {name}
+  //         <br />
+  //       </>
+  //     )),
+  // },
 ]

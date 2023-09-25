@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { TextField, Button, Box, useTheme, Grid, MenuItem } from '@mui/material'
-import { useCreateCategoryMutation, useUpdateCategoryMutation } from 'state/api'
+import {
+  useCreateCategoryMutation,
+  useGetCategoriesQuery,
+  useUpdateCategoryMutation,
+} from 'state/api'
 const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const {
     register,
@@ -14,7 +18,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
   const theme = useTheme()
   const [createCategory, createError] = useCreateCategoryMutation()
   const [updateCategory, updateError] = useUpdateCategoryMutation()
-  // const { data, isLoading } = useGetCategoriesQuery()
+  const { data, isLoading } = useGetCategoriesQuery()
   const [properties, setProperties] = useState([])
 
   useEffect(() => {
@@ -27,7 +31,6 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
       reset()
       setProperties([])
     }
-    console.log(properties)
   }, [isOpen])
 
   const handleCreate = (data) => {
@@ -82,7 +85,6 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
   return (
     <Box
       sx={{
-        width: '50%',
         height: '100%',
         marginBottom: '10px',
       }}
@@ -98,8 +100,8 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
       >
         <h2>Tạo danh mục sản phẩm mới</h2>
         <form onSubmit={handleSubmit(handleCreate)}>
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
               <TextField
                 sx={{ width: '100%', marginBottom: '1rem' }}
                 label="Tên danh mục"
@@ -107,6 +109,25 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
                 error={errors.name ? true : false}
                 helperText={errors.name ? 'Vui lòng nhập tên danh mục' : ''}
               />
+            </Grid>
+            <Grid item xs={6}>
+              {isLoading ? (
+                <div>Loading...</div>
+              ) : (
+                <TextField
+                  sx={{ width: '100%', marginBottom: '1rem' }}
+                  label="Parent"
+                  select
+                  defaultValue=""
+                  {...register('parent')}
+                >
+                  {data.map((option, index) => (
+                    <MenuItem key={index} value={option._id}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
             </Grid>
             {/* <Button sx={{ margin: '0.5rem 0' }} variant="contained" onClick={addProperty}>
               Thêm thuộc tính
