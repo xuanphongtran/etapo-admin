@@ -118,12 +118,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     setFiles([...files, ev.target.files[0]])
   }
 
-  const gender = [
-    { _id: 1, name: 'Nam' },
-    { _id: 2, name: 'Nữ' },
-    { _id: 3, name: 'Cặp đôi' },
-  ]
-
   return (
     <Box
       sx={{
