@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { TextField, Button, Box, useTheme, Grid, MenuItem } from '@mui/material'
 import {
@@ -6,6 +6,11 @@ import {
   useGetCategoriesQuery,
   useUpdateCategoryMutation,
 } from 'state/api'
+const level = [
+  { value: 1, label: '1' },
+  { value: 2, label: '2' },
+  { value: 3, label: '3' },
+]
 const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const {
     register,
@@ -19,24 +24,20 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
   const [createCategory, createError] = useCreateCategoryMutation()
   const [updateCategory, updateError] = useUpdateCategoryMutation()
   const { data, isLoading } = useGetCategoriesQuery()
-  const [properties, setProperties] = useState([])
 
   useEffect(() => {
     if (dataToEdit) {
       setFocus('name')
       setValue('name', dataToEdit.name)
-      // setValue('parent', dataToEdit.category)
-      setProperties(dataToEdit.properties)
+      setValue('parent', dataToEdit.category)
     } else {
       reset()
-      setProperties([])
     }
   }, [isOpen])
 
   const handleCreate = (data) => {
-    const newData = { ...data, properties }
     if (!dataToEdit) {
-      createCategory(newData)
+      createCategory(data)
       setNotify({
         isOpen: true,
         message: 'Tạo mới thành công',
@@ -45,7 +46,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
       refetch()
     } else {
       const id = dataToEdit._id
-      updateCategory({ id, ...newData })
+      updateCategory({ id, ...data })
       setNotify({
         isOpen: true,
         message: 'Cập nhập thành công',
@@ -59,29 +60,6 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
   if (!isOpen) {
     return null
   }
-
-  // const addProperty = () => {
-  //   setProperties((prev) => {
-  //     return [...prev, '']
-  //   })
-  // }
-
-  // const handlePropertyNameChange = (index, property, newName) => {
-  //   setProperties((prev) => {
-  //     const properties = [...prev]
-  //     properties[index] = newName
-  //     return properties
-  //   })
-  // }
-
-  // const removeProperty = (indexToRemove) => {
-  //   setProperties((prev) => {
-  //     return [...prev].filter((p, pIndex) => {
-  //       return pIndex !== indexToRemove
-  //     })
-  //   })
-  // }
-
   return (
     <Box
       sx={{
@@ -101,7 +79,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
         <h2>Tạo danh mục sản phẩm mới</h2>
         <form onSubmit={handleSubmit(handleCreate)}>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 sx={{ width: '100%', marginBottom: '1rem' }}
                 label="Tên danh mục"
@@ -110,13 +88,13 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
                 helperText={errors.name ? 'Vui lòng nhập tên danh mục' : ''}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               {isLoading ? (
                 <div>Loading...</div>
               ) : (
                 <TextField
                   sx={{ width: '100%', marginBottom: '1rem' }}
-                  label="Parent"
+                  label="Danh mục cha"
                   select
                   defaultValue=""
                   {...register('parent')}
@@ -129,33 +107,21 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
                 </TextField>
               )}
             </Grid>
-            {/* <Button sx={{ margin: '0.5rem 0' }} variant="contained" onClick={addProperty}>
-              Thêm thuộc tính
-            </Button>
-            {properties.length > 0 &&
-              properties.map((property, index) => (
-                <Grid
-                  key={index}
-                  item
-                  xs={12}
-                  sx={{ justifyContent: 'space-between', display: 'flex' }}
-                >
-                  <TextField
-                    sx={{ width: 500, marginRight: 5 }}
-                    label="Tên thuộc tính"
-                    value={property}
-                    onChange={(ev) => handlePropertyNameChange(index, property, ev.target.value)}
-                  />
-                  <Button
-                    onClick={() => removeProperty(index)}
-                    variant="contained"
-                    color="error"
-                    height={20}
-                  >
-                    Xoá
-                  </Button>
-                </Grid>
-              ))} */}
+            <Grid item xs={4}>
+              <TextField
+                sx={{ width: '100%', marginBottom: '1rem' }}
+                label="Cấp bậc"
+                select
+                defaultValue=""
+                {...register('level')}
+              >
+                {level.map((option, index) => (
+                  <MenuItem key={index} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
             <Grid item xs={12} sx={{ justifyContent: 'space-around', display: 'flex' }}>
               <Button type="submit" variant="contained">
                 Tạo danh mục sản phẩm

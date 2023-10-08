@@ -15,11 +15,14 @@ import {
   useCreateProductMutation,
   useGetBrandsQuery,
   useGetCategoriesQuery,
+  useGetPropertiesQuery,
   useUpdateProductMutation,
 } from 'state/api'
 import axios from 'axios'
 import { productsForm } from 'constants/form'
 import { NumericFormatCustom } from 'components/NumericFormatCustom'
+import { DataArray } from '@mui/icons-material'
+import { DeleteImg } from 'state/deleteImg'
 const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const {
     register,
@@ -34,23 +37,26 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const [updateProduct, updateError] = useUpdateProductMutation()
   const { data: categoryData, isLoading: isLoadingCate } = useGetCategoriesQuery()
   const { data: brandData, isLoading: isLoadingBrand } = useGetBrandsQuery()
-  // const [category, setCategory] = useState('')
-  // const [propertiesToFill, setPropertiesToFill] = useState([])
-  // const [productProperties, setProductProperties] = useState({})
+  const { data: properties, isLoading: isLoadingProperties } = useGetPropertiesQuery()
   const [images, setImages] = useState([])
   const [files, setFiles] = useState([])
+  const [productProperties, setProductProperties] = useState([])
 
   useEffect(() => {
     if (dataToEdit) {
       setFocus('name')
       setValue('name', dataToEdit.name)
-      setValue('price', dataToEdit.price)
+      setValue('price', dataToEdit.price.replace(/,/g, ''))
       setValue('description', dataToEdit.description)
       setValue('category', dataToEdit.category)
       setValue('discount', dataToEdit.discount)
+      setProductProperties(dataToEdit.properties)
+      setImages(dataToEdit.images)
     } else {
       reset(productsForm)
-      // setCategory('')
+      setImages([])
+      setFiles([])
+      setProductProperties([])
     }
   }, [isOpen])
 
@@ -68,10 +74,11 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
         imagesUrl.push(response.data.url)
       }
     }
+
     const newData = {
       ...data,
       images: imagesUrl,
-      // properties: productProperties,
+      properties: productProperties,
     }
     if (!dataToEdit) {
       createProduct(newData)
@@ -81,8 +88,15 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
         type: 'success',
       })
     } else {
+      const urlDeletes = dataToEdit.images?.filter((element) => !images.includes(element))
+      if (urlDeletes.length > 0) {
+        for (const urlDelete of urlDeletes) {
+          const response = await DeleteImg(urlDelete)
+        }
+      }
       const id = dataToEdit._id
-      updateProduct({ ...newData, id })
+      const img = dataToEdit.images?.filter((element) => images.includes(element)).concat(imagesUrl)
+      updateProduct({ ...newData, id, images: img })
       setNotify({
         isOpen: true,
         message: 'Cập nhập thành công',
@@ -90,7 +104,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
       })
     }
     setIsOpen(false)
-    console.log(newData)
     refetch()
   }
 
@@ -98,24 +111,31 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     return null
   }
 
-  // const handleCategoryChange = (event) => {
-  //   setCategory(event.target.value)
-  //   if (data.length > 0 && event.target.value) {
-  //     const cat = data.find((e) => e._id === event.target.value)
-  //     setPropertiesToFill(cat.properties)
-  //   }
-  // }
-
-  // const handlePropertyChange = (value, name) => {
-  //   setProductProperties((prev) => {
-  //     const newProductProps = { ...prev }
-  //     newProductProps[name] = value
-  //     return newProductProps
-  //   })
-  // }
+  const handlePropertyChange = (label, value) => {
+    const index = productProperties.findIndex((e) => e.label === label)
+    if (index !== -1) {
+      setProductProperties((prevState) => {
+        const newState = [...prevState]
+        newState[index] = { label, value }
+        return newState
+      })
+    } else {
+      // Nếu không tồn tại, thêm object mới vào mảng
+      setProductProperties((prevState) => [...prevState, { label, value }])
+    }
+  }
   const handleFileChange = (ev) => {
     setImages([...images, URL.createObjectURL(ev.target.files[0])])
     setFiles([...files, ev.target.files[0]])
+  }
+
+  const handleImageDoubleClick = (index) => {
+    const updatedImages = [...images]
+    const updatedFiles = [...files]
+    updatedImages.splice(index, 1)
+    updatedFiles.splice(index, 1)
+    setImages(updatedImages)
+    setFiles(updatedFiles)
   }
 
   return (
@@ -145,7 +165,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                 error={errors.name ? true : false}
                 helperText={errors.name ? 'Vui lòng nhập tên sản phẩm' : ''}
               />
-
               <TextField
                 multiline
                 rows={4}
@@ -153,7 +172,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                 label="Mô tả"
                 {...register('description')}
               />
-
               <TextField
                 sx={{ width: '100%', marginBottom: '1rem' }}
                 variant="outlined"
@@ -162,16 +180,18 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                   endAdornment: <InputAdornment position="end">đ</InputAdornment>,
                 }}
                 label="Giá"
+                defaultValue={dataToEdit ? dataToEdit.price : ''}
                 {...register('price', { required: true })}
                 error={errors.price ? true : false}
                 helperText={errors.price ? 'Vui lòng nhập giá sản phẩm' : ''}
               />
-
               <TextField
                 sx={{ width: '100%', marginBottom: '1rem' }}
                 variant="outlined"
                 InputProps={{
                   endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                  min: 0,
+                  max: 10,
                 }}
                 label="Giảm giá"
                 {...register('discount')}
@@ -202,7 +222,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                   select
                   defaultValue={dataToEdit ? dataToEdit.category : ''}
                   {...register('category')}
-                  // onChange={handleCategoryChange}
                 >
                   {categoryData.map((option, index) => (
                     <MenuItem key={index} value={option._id}>
@@ -211,23 +230,30 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                   ))}
                 </TextField>
               )}
-              {/* {propertiesToFill.length > 0 &&
-                propertiesToFill.map((property, index) => (
+              {isLoadingProperties ? (
+                <div>Loading...</div>
+              ) : (
+                properties.map((pro, index) => (
                   <TextField
                     key={index}
                     sx={{ width: '100%', marginBottom: '1rem' }}
-                    label={property.name}
+                    label={pro.name}
                     select
-                    defaultValue=""
-                    onChange={(ev) => handlePropertyChange(ev.target.value, property.name)}
+                    defaultValue={
+                      dataToEdit
+                        ? dataToEdit.properties?.find((e) => e.label == pro.name)?.value
+                        : ''
+                    }
+                    onChange={(ev) => handlePropertyChange(pro.name, ev.target.value)}
                   >
-                    {property?.values?.map((option, index) => (
+                    {pro.value?.map((option, index) => (
                       <MenuItem key={index} value={option}>
                         {option}
                       </MenuItem>
                     ))}
                   </TextField>
-                ))} */}
+                ))
+              )}
             </Grid>
             <Grid sx={{ alignItems: 'center' }} item xs={6}>
               <input
@@ -269,6 +295,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                         objectFit: 'contain',
                       },
                     }}
+                    onDoubleClick={() => handleImageDoubleClick(index)}
                   >
                     <img
                       src={`${item}`}

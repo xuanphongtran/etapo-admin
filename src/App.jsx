@@ -8,7 +8,7 @@ import { themeSettings } from 'theme'
 import Dashboard from 'scenes/dashboard'
 import Products from 'scenes/products'
 import Layout from 'scenes/layout'
-import Geography from 'scenes/geography'
+import Geography from 'scenes/properties'
 import Overview from 'scenes/overview'
 import Daily from 'scenes/daily'
 import Monthly from 'scenes/monthly'
@@ -19,6 +19,7 @@ import Orders from 'scenes/orders'
 import Categories from 'scenes/categories'
 import Brands from 'scenes/brands'
 import { viVN } from '@mui/material/locale'
+import Properties from 'scenes/properties'
 
 function App() {
   const mode = useSelector((state) => state.global.mode)
@@ -34,10 +35,10 @@ function App() {
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/properties" element={<Properties />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/brands" element={<Brands />} />
               <Route path="/orders" element={<Orders />} />
-              <Route path="/geography" element={<Geography />} />
               <Route path="/overview" element={<Overview />} />
               <Route path="/daily" element={<Daily />} />
               <Route path="/monthly" element={<Monthly />} />

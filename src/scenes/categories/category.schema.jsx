@@ -1,5 +1,3 @@
-import React from 'react'
-
 export const columns = [
   {
     field: '_id',
@@ -8,27 +6,19 @@ export const columns = [
   },
   {
     field: 'name',
-    headerName: 'Name',
+    headerName: 'Tên',
     flex: 1,
   },
 
   {
     field: 'parent',
-    headerName: 'Parent',
+    headerName: 'Danh mục cha',
     flex: 1,
     renderCell: (params) => params.row.parent,
   },
-  // {
-  //   field: 'list',
-  //   headerName: 'Properties',
-  //   flex: 1,
-  //   sortable: false,
-  //   renderCell: (params) =>
-  //     params.row.properties?.map(({ name }) => (
-  //       <>
-  //         {name}
-  //         <br />
-  //       </>
-  //     )),
-  // },
+  {
+    field: 'level',
+    headerName: 'Cấp bậc',
+    flex: 1,
+  },
 ]

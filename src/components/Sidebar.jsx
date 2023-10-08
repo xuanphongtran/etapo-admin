@@ -50,6 +50,11 @@ const navItems = [
     icon: <ShoppingCartOutlined />,
   },
   {
+    label: 'Thuộc tính',
+    text: 'Properties',
+    icon: <PublicOutlined />,
+  },
+  {
     label: 'Danh mục ',
     text: 'Categories',
     icon: <CategoryOutlined />,
@@ -63,11 +68,6 @@ const navItems = [
     label: 'Đơn hàng',
     text: 'Orders',
     icon: <ReceiptLongOutlined />,
-  },
-  {
-    label: 'Trang chủ',
-    text: 'Geography',
-    icon: <PublicOutlined />,
   },
   {
     text: 'Sales',

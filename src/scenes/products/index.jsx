@@ -23,14 +23,17 @@ import { useDeleteProductMutation, useGetProductsQuery } from 'state/api'
 import Header from 'components/Header'
 import ProductForm from './createProduct'
 import Notification from 'components/dialog/Notification'
+import { DeleteImg } from 'state/deleteImg'
 
 const Product = ({
   _id,
   name,
+  images,
   description,
   price,
   rating,
   category,
+  brand,
   supply,
   stat,
   properties,
@@ -40,20 +43,12 @@ const Product = ({
   const theme = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
   const [open, setOpen] = useState(false)
-  const handleDelete = (a) => {
+  const handleDelete = async (a) => {
     handleDeleteProduct(a)
-    setOpen(false)
-  }
-  const keyValueElements = []
-
-  for (const key in properties) {
-    if (properties.hasOwnProperty(key)) {
-      keyValueElements.push(
-        <Typography key={key}>
-          {key}: {properties[key]}
-        </Typography>,
-      )
+    for (const a of images) {
+      await DeleteImg(a)
     }
+    setOpen(false)
   }
 
   return (
@@ -71,7 +66,7 @@ const Product = ({
         <Typography variant="h5" component="div">
           {name}
         </Typography>
-        <Typography sx={{ mb: '1.5rem' }} color={theme.palette.secondary[400]}>
+        <Typography sx={{ m: '0.5rem 0' }} color={theme.palette.secondary[400]}>
           {price} đ
         </Typography>
         <Rating value={rating} readOnly />
@@ -84,7 +79,7 @@ const Product = ({
           size="small"
           onClick={() => handleEditProduct(_id)}
         >
-          Edit
+          Chỉnh sửa
         </Button>
         <Button
           sx={{ mt: '1rem' }}
@@ -93,7 +88,7 @@ const Product = ({
           size="small"
           onClick={() => setOpen(true)}
         >
-          Delete
+          Xoá sản phẩm
         </Button>
         {/* Dialog Confirm */}
         <Dialog
@@ -125,7 +120,7 @@ const Product = ({
           size="small"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          See More
+          Xem thêm
         </Button>
       </CardActions>
       <Collapse
@@ -137,14 +132,15 @@ const Product = ({
         }}
       >
         <CardContent>
-          <Typography>Category: {category}</Typography>
-          {properties &&
+          <Typography>Danh mục: {category}</Typography>
+          <Typography>Thương hiệu: {brand}</Typography>
+          {/* {properties &&
             Object.keys(properties).forEach((key) => (
               <Typography>
                 {key}: {properties[key]}
               </Typography>
-            ))}
-          {keyValueElements}
+            ))} */}
+          {/* {keyValueElements} */}
           {/* <Typography>Supply Left: {supply}</Typography>
           <Typography>Yearly Sales This Year: {stat.yearlySalesTotal}</Typography>
           <Typography>Yearly Units Sold This Year: {stat.yearlyTotalSoldUnits}</Typography> */}
@@ -172,7 +168,7 @@ const Products = () => {
     refetch()
   }
   const handleEditProduct = (a) => {
-    const result = data.find((e) => e._id === a)
+    const result = data.productWithStats.find((e) => e._id === a)
     setDataDetail(result)
     setIsOpen(true)
   }
@@ -183,7 +179,7 @@ const Products = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="PRODUCTS" subtitle="See your list of products." />
+      <Header title="SẢN PHẨM" />
       <Button sx={{ margin: '1rem 0' }} variant="contained" onClick={handleOpenCreate}>
         Tạo sản phẩm mới
       </Button>
@@ -196,7 +192,7 @@ const Products = () => {
         refetch={refetch}
         setNotify={setNotify}
       />
-
+      <Header subtitle="Danh sách sản phẩm" />
       {data || !isLoading ? (
         <Box
           mt="20px"
@@ -209,8 +205,20 @@ const Products = () => {
             '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
           }}
         >
-          {data.map(
-            ({ _id, name, description, price, rating, category, supply, stat, properties }) => (
+          {data.productWithStats.map(
+            ({
+              _id,
+              name,
+              images,
+              description,
+              price,
+              rating,
+              category,
+              brand,
+              supply,
+              stat,
+              properties,
+            }) => (
               <Product
                 key={_id}
                 _id={_id}
@@ -222,6 +230,7 @@ const Products = () => {
                 category={category}
                 supply={supply}
                 stat={stat}
+                images={images}
                 handleDeleteProduct={handleDeleteProduct}
                 handleEditProduct={handleEditProduct}
               />
@@ -229,7 +238,7 @@ const Products = () => {
           )}
         </Box>
       ) : (
-        <>Loading...</>
+        <>Đang tải...</>
       )}
     </Box>
   )

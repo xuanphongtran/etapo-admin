@@ -7,6 +7,12 @@ export const columns = [
   {
     field: 'name',
     headerName: 'Tên',
-    flex: 0.5,
+    flex: 1,
+  },
+
+  {
+    field: 'value',
+    headerName: 'Giá trị',
+    flex: 2,
   },
 ]

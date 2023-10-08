@@ -9,13 +9,13 @@ export const api = createApi({
     'Products',
     'Customers',
     'Orders',
-    'Geography',
     'Sales',
     'Admins',
     'Performance',
     'Dashboard',
     'Categories',
     'Brands',
+    'Properties',
   ],
   endpoints: (build) => ({
     getUser: build.query({
@@ -23,8 +23,12 @@ export const api = createApi({
       providesTags: ['User'],
     }),
     getProducts: build.query({
-      query: () => ({ url: 'client/products', method: 'GET' }),
+      query: () => ({ url: 'product', method: 'GET' }),
       providesTags: ['Products'],
+    }),
+    getProperties: build.query({
+      query: () => ({ url: 'product/properties', method: 'GET' }),
+      providesTags: ['Properties'],
     }),
     getCategories: build.query({
       query: () => 'client/categories',
@@ -46,10 +50,6 @@ export const api = createApi({
       }),
       providesTags: ['Orders'],
     }),
-    getGeography: build.query({
-      query: () => 'client/geography',
-      providesTags: ['Geography'],
-    }),
     getSales: build.query({
       query: () => 'sales/sales',
       providesTags: ['Sales'],
@@ -67,18 +67,18 @@ export const api = createApi({
       providesTags: ['Dashboard'],
     }),
     createProduct: build.mutation({
-      query: (data) => ({ url: 'client/products', method: 'POST', body: data }),
+      query: (data) => ({ url: 'product', method: 'POST', body: data }),
       invalidatesTags: ['Post'],
     }),
     updateProduct: build.mutation({
       query: (updatePostData) => {
         const { id, ...data } = updatePostData
-        return { url: `client/products/${id}`, method: 'PUT', body: data }
+        return { url: `product/${id}`, method: 'PUT', body: data }
       },
       invalidatesTags: ['Post'],
     }),
     deleteProduct: build.mutation({
-      query: (id) => ({ url: `client/products/${id}`, method: 'DELETE' }),
+      query: (id) => ({ url: `product/${id}`, method: 'DELETE' }),
     }),
     createCategory: build.mutation({
       query: (data) => ({ url: 'client/categories', method: 'POST', body: data }),
@@ -108,6 +108,20 @@ export const api = createApi({
     deleteBrand: build.mutation({
       query: (id) => ({ url: `client/brands/${id}`, method: 'DELETE' }),
     }),
+    createProperty: build.mutation({
+      query: (data) => ({ url: 'product/property', method: 'POST', body: data }),
+      invalidatesTags: ['Post'],
+    }),
+    updateProperty: build.mutation({
+      query: (updatePostData) => {
+        const { id, ...data } = updatePostData
+        return { url: `product/property/${id}`, method: 'PUT', body: data }
+      },
+      invalidatesTags: ['Post'],
+    }),
+    deleteProperty: build.mutation({
+      query: (id) => ({ url: `product/property/${id}`, method: 'DELETE' }),
+    }),
   }),
 })
 
@@ -116,9 +130,9 @@ export const {
   useGetCategoriesQuery,
   useGetBrandsQuery,
   useGetProductsQuery,
+  useGetPropertiesQuery,
   useGetCustomersQuery,
   useGetOrdersQuery,
-  useGetGeographyQuery,
   useGetSalesQuery,
   useGetAdminsQuery,
   useGetUserPerformanceQuery,
@@ -132,4 +146,7 @@ export const {
   useCreateBrandMutation,
   useUpdateBrandMutation,
   useDeleteBrandMutation,
+  useCreatePropertyMutation,
+  useUpdatePropertyMutation,
+  useDeletePropertyMutation,
 } = api
