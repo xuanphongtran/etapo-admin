@@ -28,8 +28,6 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
   useEffect(() => {
     if (dataToEdit) {
       setFocus('name')
-      setValue('name', dataToEdit.name)
-      setValue('parent', dataToEdit.category)
     } else {
       reset()
     }
@@ -85,6 +83,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
                 label="Tên danh mục"
                 {...register('name', { required: true })}
                 error={errors.name ? true : false}
+                defaultValue={dataToEdit ? dataToEdit.name : ''}
                 helperText={errors.name ? 'Vui lòng nhập tên danh mục' : ''}
               />
             </Grid>
@@ -96,7 +95,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
                   sx={{ width: '100%', marginBottom: '1rem' }}
                   label="Danh mục cha"
                   select
-                  defaultValue=""
+                  defaultValue={dataToEdit ? dataToEdit?.parent?._id : null}
                   {...register('parent')}
                 >
                   {data.map((option, index) => (
@@ -112,7 +111,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
                 sx={{ width: '100%', marginBottom: '1rem' }}
                 label="Cấp bậc"
                 select
-                defaultValue=""
+                defaultValue={dataToEdit ? dataToEdit?.level : ''}
                 {...register('level')}
               >
                 {level.map((option, index) => (

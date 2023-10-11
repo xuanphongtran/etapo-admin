@@ -14,7 +14,7 @@ export const columns = [
     field: 'parent',
     headerName: 'Danh mục cha',
     flex: 1,
-    renderCell: (params) => params.row.parent,
+    renderCell: (params) => params.row?.parent?.name,
   },
   {
     field: 'level',
