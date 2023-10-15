@@ -53,6 +53,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
       refetch()
     }
     setIsOpen(false)
+    refetch()
   }
 
   if (!isOpen) {
@@ -98,7 +99,7 @@ const CategotyForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => 
                   defaultValue={dataToEdit ? dataToEdit?.parent?._id : null}
                   {...register('parent')}
                 >
-                  {data.map((option, index) => (
+                  {data?.categorie.map((option, index) => (
                     <MenuItem key={index} value={option._id}>
                       {option.name}
                     </MenuItem>

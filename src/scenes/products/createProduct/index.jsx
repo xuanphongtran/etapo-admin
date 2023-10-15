@@ -35,8 +35,14 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const theme = useTheme()
   const [createProduct, createError] = useCreateProductMutation()
   const [updateProduct, updateError] = useUpdateProductMutation()
-  const { data: categoryData, isLoading: isLoadingCate } = useGetCategoriesQuery()
-  const { data: brandData, isLoading: isLoadingBrand } = useGetBrandsQuery()
+  const { data: categoryData, isLoading: isLoadingCate } = useGetCategoriesQuery({
+    page: 0,
+    pageSize: 100,
+  })
+  const { data: brandData, isLoading: isLoadingBrand } = useGetBrandsQuery({
+    page: 0,
+    pageSize: 100,
+  })
   const { data: properties, isLoading: isLoadingProperties } = useGetPropertiesQuery()
   const [images, setImages] = useState([])
   const [files, setFiles] = useState([])
@@ -206,7 +212,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                   defaultValue={dataToEdit ? dataToEdit.brand : ''}
                   {...register('brand')}
                 >
-                  {brandData.map((option, index) => (
+                  {brandData?.brands.map((option, index) => (
                     <MenuItem key={index} value={option._id}>
                       {option.name}
                     </MenuItem>
@@ -223,7 +229,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
                   defaultValue={dataToEdit ? dataToEdit.category : ''}
                   {...register('category')}
                 >
-                  {categoryData.map((option, index) => (
+                  {categoryData?.categories.map((option, index) => (
                     <MenuItem key={index} value={option._id}>
                       {option.name}
                     </MenuItem>

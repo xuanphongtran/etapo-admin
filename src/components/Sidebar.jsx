@@ -41,7 +41,7 @@ const navItems = [
     icon: <HomeOutlined />,
   },
   {
-    text: 'Client Facing',
+    text: 'Quản lý',
     icon: null,
   },
   {
@@ -70,43 +70,43 @@ const navItems = [
     icon: <ReceiptLongOutlined />,
   },
   {
-    text: 'Sales',
+    text: 'Thống kê',
     icon: null,
   },
-  {
-    label: 'Trang chủ',
-    text: 'Overview',
-    icon: <PointOfSaleOutlined />,
-  },
-  {
-    label: 'Trang chủ',
-    text: 'Daily',
-    icon: <TodayOutlined />,
-  },
-  {
-    label: 'Trang chủ',
-    text: 'Monthly',
-    icon: <CalendarMonthOutlined />,
-  },
-  {
-    label: 'Trang chủ',
-    text: 'Breakdown',
-    icon: <PieChartOutline />,
-  },
-  {
-    text: 'Management',
-    icon: null,
-  },
-  {
-    label: 'Trang chủ',
-    text: 'Admin',
-    icon: <AdminPanelSettingsOutlined />,
-  },
-  {
-    label: 'Trang chủ',
-    text: 'Performance',
-    icon: <TrendingUpOutlined />,
-  },
+  // {
+  //   label: 'Trang chủ',
+  //   text: 'Overview',
+  //   icon: <PointOfSaleOutlined />,
+  // },
+  // {
+  //   label: 'Trang chủ',
+  //   text: 'Daily',
+  //   icon: <TodayOutlined />,
+  // },
+  // {
+  //   label: 'Trang chủ',
+  //   text: 'Monthly',
+  //   icon: <CalendarMonthOutlined />,
+  // },
+  // {
+  //   label: 'Trang chủ',
+  //   text: 'Breakdown',
+  //   icon: <PieChartOutline />,
+  // },
+  // {
+  //   text: 'Management',
+  //   icon: null,
+  // },
+  // {
+  //   label: 'Trang chủ',
+  //   text: 'Admin',
+  //   icon: <AdminPanelSettingsOutlined />,
+  // },
+  // {
+  //   label: 'Trang chủ',
+  //   text: 'Performance',
+  //   icon: <TrendingUpOutlined />,
+  // },
 ]
 
 const Sidebar = ({ user, drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) => {
@@ -149,7 +149,7 @@ const Sidebar = ({ user, drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobi
               <FlexBetween color={theme.palette.secondary.main}>
                 <Box display="flex" alignItems="center" gap="0.5rem">
                   <Typography variant="h4" fontWeight="bold">
-                    E-TAPO ADMIN
+                    ZIGGY ADMIN
                   </Typography>
                 </Box>
                 {!isNonMobile && (

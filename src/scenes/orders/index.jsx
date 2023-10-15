@@ -5,6 +5,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { useGetOrdersQuery } from 'state/api'
 import Header from 'components/Header'
 import DataGridCustomToolbar from 'components/DataGridCustomToolbar'
+import { columns } from './order.schema'
 
 const Orders = () => {
   const theme = useTheme()
@@ -23,67 +24,9 @@ const Orders = () => {
     search,
   })
 
-  const columns = [
-    {
-      field: '_id',
-      headerName: 'ID',
-      flex: 1,
-    },
-    {
-      field: 'userId',
-      headerName: 'User ID',
-      flex: 1,
-    },
-    {
-      field: 'createdAt',
-      headerName: 'CreatedAt',
-      flex: 1,
-    },
-    {
-      field: 'products',
-      headerName: '# of Products',
-      flex: 0.5,
-      sortable: false,
-      renderCell: (params) => params.value.length,
-    },
-    {
-      field: 'cost',
-      headerName: 'Cost',
-      flex: 1,
-      renderCell: (params) => `${Number(params.value).toFixed(2)}đ`,
-    },
-    {
-      field: 'address',
-      headerName: 'Address',
-      sortable: false,
-      flex: 1,
-      valueGetter: (params) =>
-        `${params.row.information?.streetAddress || ''} ${params.row.information?.city || ''} ${
-          params.row.information?.country || ''
-        }`,
-    },
-    {
-      field: 'list',
-      headerName: 'Products',
-      flex: 1,
-      sortable: false,
-      renderCell: (params) =>
-        params.row.products?.map((l) =>
-          l.price_data ? (
-            <>
-              {l?.price_data?.product_data.name} x{l?.quantity}
-              <br />
-            </>
-          ) : (
-            <></>
-          ),
-        ),
-    },
-  ]
-
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ORDERS" subtitle="Entire list of orders" />
+      <Header title="Đơn hàng" subtitle="Toàn bộ danh sách đơn hàng" />
       <Box
         height="80vh"
         sx={{
@@ -119,11 +62,11 @@ const Orders = () => {
           getRowId={(row) => row._id}
           rows={(data && data.orders) || []}
           columns={columns}
+          checkboxSelection
+          hideFooterSelectedRowCount
           rowCount={(data && data.total) || 0}
           rowsPerPageOptions={[20, 50, 100]}
           pagination
-          checkboxSelection
-          hideFooterSelectedRowCount
           page={page}
           pageSize={pageSize}
           paginationMode="server"
@@ -131,10 +74,10 @@ const Orders = () => {
           onPageChange={(newPage) => setPage(newPage)}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           onSortModelChange={(newSortModel) => setSort(...newSortModel)}
-          // components={{ Toolbar: DataGridCustomToolbar }}
-          // componentsProps={{
-          //   toolbar: { searchInput, setSearchInput, setSearch },
-          // }}
+          components={{ Toolbar: DataGridCustomToolbar }}
+          componentsProps={{
+            toolbar: { searchInput, setSearchInput, setSearch },
+          }}
         />
       </Box>
     </Box>

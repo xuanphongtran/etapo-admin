@@ -31,11 +31,19 @@ export const api = createApi({
       providesTags: ['Properties'],
     }),
     getCategories: build.query({
-      query: () => 'client/categories',
+      query: ({ page, pageSize, sort, search }) => ({
+        url: 'client/categories',
+        method: 'GET',
+        params: { page, pageSize, sort, search },
+      }),
       providesTags: ['Categories'],
     }),
     getBrands: build.query({
-      query: () => 'client/brands',
+      query: ({ page, pageSize, sort, search }) => ({
+        url: 'client/brands',
+        method: 'GET',
+        params: { page, pageSize, sort, search },
+      }),
       providesTags: ['Brands'],
     }),
     getCustomers: build.query({

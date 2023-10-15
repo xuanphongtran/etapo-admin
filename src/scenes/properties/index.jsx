@@ -32,6 +32,9 @@ const Categories = () => {
     setDataDetail(null)
     setIsOpen(!isOpen)
   }
+  const handleRefech = () => {
+    refetch()
+  }
   const handleUpdateCategory = () => {
     if (selectedRows.length === 1) {
       const result = data.find((e) => e._id === selectedRows[0])
@@ -132,7 +135,7 @@ const Categories = () => {
         dataToEdit={dataDetail}
         isOpen={isOpen}
         setIsOpen={handleOpenCreate}
-        refetch={() => refetch()}
+        refetch={handleRefech}
         setNotify={setNotify}
       />
       <Header subtitle="Danh sách Thuộc tính sản phẩm" />

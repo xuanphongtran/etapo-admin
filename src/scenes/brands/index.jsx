@@ -16,10 +16,25 @@ import Notification from 'components/dialog/Notification'
 import { columns } from './brand.schema'
 import CategotyForm from './createBrand'
 import { useDeleteBrandMutation, useGetBrandsQuery } from 'state/api'
+import DataGridCustomToolbar from 'components/DataGridCustomToolbar'
 
 const Brands = () => {
   const theme = useTheme()
-  const { data, isLoading, refetch } = useGetBrandsQuery()
+
+  // values to be sent to the backend
+  const [page, setPage] = useState(0)
+  const [pageSize, setPageSize] = useState(20)
+  const [sort, setSort] = useState({})
+  const [search, setSearch] = useState('')
+
+  const [searchInput, setSearchInput] = useState('')
+  const { data, isLoading, refetch } = useGetBrandsQuery({
+    page,
+    pageSize,
+    sort: JSON.stringify(sort),
+    search,
+  })
+
   const [deleteBrand] = useDeleteBrandMutation()
   const [dataDetail, setDataDetail] = useState()
   const [isOpen, setIsOpen] = useState(false)
@@ -31,6 +46,9 @@ const Brands = () => {
   const handleOpenCreate = () => {
     setDataDetail(null)
     setIsOpen(!isOpen)
+  }
+  const handleRefech = () => {
+    refetch()
   }
   const handleUpdateCategory = () => {
     if (selectedRows.length === 1) {
@@ -132,13 +150,12 @@ const Brands = () => {
         dataToEdit={dataDetail}
         isOpen={isOpen}
         setIsOpen={handleOpenCreate}
-        refetch={() => refetch()}
+        refetch={handleRefech}
         setNotify={setNotify}
       />
       <Header subtitle="Danh sách thương hiệu" />
 
       <Box
-        mt="20px"
         height="75vh"
         sx={{
           '& .MuiDataGrid-root': {
@@ -171,10 +188,24 @@ const Brands = () => {
         <DataGrid
           loading={isLoading || !data}
           getRowId={(row) => row._id}
-          rows={data || []}
+          rows={(data && data.brands) || []}
           columns={columns}
           checkboxSelection
           hideFooterSelectedRowCount
+          rowCount={(data && data.total) || 0}
+          rowsPerPageOptions={[20, 50, 100]}
+          pagination
+          page={page}
+          pageSize={pageSize}
+          paginationMode="server"
+          sortingMode="server"
+          onPageChange={(newPage) => setPage(newPage)}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          onSortModelChange={(newSortModel) => setSort(...newSortModel)}
+          components={{ Toolbar: DataGridCustomToolbar }}
+          componentsProps={{
+            toolbar: { searchInput, setSearchInput, setSearch },
+          }}
           onCellDoubleClick={onCellDoubleClick}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />
