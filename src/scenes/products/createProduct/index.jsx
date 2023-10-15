@@ -21,7 +21,6 @@ import {
 import axios from 'axios'
 import { productsForm } from 'constants/form'
 import { NumericFormatCustom } from 'components/NumericFormatCustom'
-import { DataArray } from '@mui/icons-material'
 import { DeleteImg } from 'state/deleteImg'
 const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   const {
@@ -116,7 +115,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
   if (!isOpen) {
     return null
   }
-
   const handlePropertyChange = (label, value) => {
     const index = productProperties.findIndex((e) => e.label === label)
     if (index !== -1) {
@@ -134,7 +132,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     setImages([...images, URL.createObjectURL(ev.target.files[0])])
     setFiles([...files, ev.target.files[0]])
   }
-
   const handleImageDoubleClick = (index) => {
     const updatedImages = [...images]
     const updatedFiles = [...files]
@@ -143,7 +140,6 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
     setImages(updatedImages)
     setFiles(updatedFiles)
   }
-
   return (
     <Box
       sx={{
@@ -272,7 +268,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
               />
               <label htmlFor="image-input">
                 <Button component="span" variant="contained" color="primary">
-                  Upload Images
+                  Đăng tải hình ảnh
                 </Button>
               </label>
               <ImageList
