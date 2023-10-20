@@ -51,10 +51,10 @@ export const api = createApi({
       providesTags: ['Customers'],
     }),
     getOrders: build.query({
-      query: ({ page, pageSize, sort, search }) => ({
-        url: 'client/orders',
+      query: ({ page, pageSize, sort, search, status }) => ({
+        url: 'sales/orders',
         method: 'GET',
-        params: { page, pageSize, sort, search },
+        params: { page, pageSize, sort, search, status },
       }),
       providesTags: ['Orders'],
     }),

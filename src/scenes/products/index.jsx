@@ -34,9 +34,6 @@ const Product = ({
   rating,
   category,
   brand,
-  supply,
-  stat,
-  properties,
   handleDeleteProduct,
   handleEditProduct,
 }) => {
@@ -71,7 +68,17 @@ const Product = ({
         </Typography>
         <Rating value={rating} readOnly />
 
-        <Typography variant="body2">{description}</Typography>
+        <Typography
+          sx={{
+            maxHeight: '88px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'normal',
+          }}
+          variant="body2"
+        >
+          {description}
+        </Typography>
 
         <Button
           sx={{ mt: '1rem', mr: '1rem' }}

@@ -1,74 +1,89 @@
+import { Tooltip } from '@mui/material'
 import React from 'react'
-
+const status = [
+  { valuel: 1, label: 'Đang chờ xác nhận' },
+  { valuel: 2, label: 'Đã xác nhận, chờ vận chuyển' },
+  { valuel: 3, label: 'Đang vận chuyên' },
+  { valuel: 4, label: 'Giao hàng thành công' },
+]
 export const columns = [
   //   {
   //     field: '_id',
   //     headerName: 'ID',
   //     flex: 1,
   //   },
-  {
-    field: 'userId',
-    headerName: 'Id Khách Hàng',
-    flex: 1,
-  },
+  // {
+  //   field: 'userId',
+  //   headerName: 'Id Khách Hàng',
+  //   flex: 1,
+  // },
   {
     field: 'fullName',
     headerName: 'Tên Khách Hàng',
-    flex: 1,
+    width: 150,
+    renderCell: (params) => (params.row.fullName ? params.row.fullName : params.row.userId),
   },
   {
     field: 'createdAt',
     headerName: 'Ngày tạo',
-    flex: 1,
+    width: 180,
+  },
+  {
+    field: 'paid',
+    headerName: 'Phương thức thanh toán',
+    width: 180,
+    renderCell: (params) => (params.row.paid === false ? 'COD' : 'VNPAY'),
+  },
+  {
+    field: 'status',
+    headerName: 'Trạng thái đơn hàng',
+    width: 180,
+    renderCell: (params) => (params.row.paid === false ? 'COD' : 'VNPAY'),
   },
   {
     field: 'products',
     headerName: 'Số sản phẩm',
-    flex: 0.5,
+    width: 100,
+
     sortable: false,
     renderCell: (params) => params.value.length,
   },
   {
     field: 'cost',
     headerName: 'Tổng tiền',
-    flex: 0.5,
-    renderCell: (params) => `${Number(params.value).toFixed(2)}đ`,
+    width: 150,
+    renderCell: (params) => `${params.value.toLocaleString()}đ`,
   },
   {
     field: 'address',
     headerName: 'Địa chỉ',
     sortable: false,
-    flex: 1,
-    valueGetter: (params) =>
-      `${params.row?.address || ''} ${params.row?.ward || ''} ${params.row?.district || ''}${
-        params.row?.province || ''
-      }`,
+    width: 400,
+
+    renderCell: (params) => (
+      <Tooltip
+        title={`${params.row?.address || ''}, ${params.row?.ward || ''}, ${
+          params.row?.district || ''
+        }, ${params.row?.province || ''}`}
+        arrow
+      >
+        <div>{`${params.row?.address || ''}, ${params.row?.ward || ''}, ${
+          params.row?.district || ''
+        }, ${params.row?.province || ''}`}</div>
+      </Tooltip>
+    ),
   },
   {
     field: 'list',
     headerName: 'Sản phẩm',
-    flex: 1,
+    width: 200,
     sortable: false,
     renderCell: (params) =>
-      params.row.products?.map((l) =>
-        l.price_data ? (
-          <>
-            {l?.price_data?.product_data.name} x{l?.quantity}
-            <br />
-          </>
-        ) : (
-          <></>
-        ),
-      ),
-  },
-  {
-    field: 'paid',
-    headerName: 'Phương thức thanh toán',
-    flex: 1,
-  },
-  {
-    field: 'status',
-    headerName: 'Trạng thái đơn hàng',
-    flex: 1,
+      params.row.products?.map((l) => (
+        <>
+          {l?.name} x{l?.quantity}
+          <br />
+        </>
+      )),
   },
 ]
