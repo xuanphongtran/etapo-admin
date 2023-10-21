@@ -18,12 +18,12 @@ const Daily = () => {
 
     const { dailyData } = data
     const totalSalesLine = {
-      id: 'totalSales',
+      id: 'Tổng doanh thu',
       color: theme.palette.secondary.main,
       data: [],
     }
     const totalUnitsLine = {
-      id: 'totalUnits',
+      id: 'Tổng số lượng',
       color: theme.palette.secondary[600],
       data: [],
     }
@@ -44,7 +44,7 @@ const Daily = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="DAILY SALES" subtitle="Chart of daily sales" />
+      <Header title="HÀNG NGÀY" subtitle="Biểu đồ bán hàng hàng ngày" />
       <Box height="75vh">
         <Box display="flex" justifyContent="flex-end">
           <Box>
@@ -105,7 +105,7 @@ const Daily = () => {
               },
             }}
             colors={{ datum: 'color' }}
-            margin={{ top: 50, right: 50, bottom: 70, left: 60 }}
+            margin={{ top: 50, right: 80, bottom: 70, left: 60 }}
             xScale={{ type: 'point' }}
             yScale={{
               type: 'linear',
@@ -123,7 +123,7 @@ const Daily = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 90,
-              legend: 'Month',
+              legend: 'Ngày',
               legendOffset: 60,
               legendPosition: 'middle',
             }}
@@ -132,7 +132,7 @@ const Daily = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: 'Total',
+              legend: 'Tổng số',
               legendOffset: -50,
               legendPosition: 'middle',
             }}
@@ -172,7 +172,7 @@ const Daily = () => {
             ]}
           />
         ) : (
-          <>Loading...</>
+          <>Đang tải...</>
         )}
       </Box>
     </Box>

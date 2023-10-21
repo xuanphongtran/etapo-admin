@@ -9,13 +9,13 @@ const Overview = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="OVERVIEW" subtitle="Overview of general revenue and profit" />
+      <Header title="TỔNG QUAN" subtitle="Tổng quan về doanh thu và số sản phẩm bán được " />
       <Box height="75vh">
         <FormControl sx={{ mt: '1rem' }}>
           <InputLabel>View</InputLabel>
           <Select value={view} label="View" onChange={(e) => setView(e.target.value)}>
-            <MenuItem value="sales">Sales</MenuItem>
-            <MenuItem value="units">Units</MenuItem>
+            <MenuItem value="sales">Doanh thu</MenuItem>
+            <MenuItem value="units">Số lượng</MenuItem>
           </Select>
         </FormControl>
         <OverviewChart view={view} />

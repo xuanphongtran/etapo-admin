@@ -1,10 +1,10 @@
 import { Tooltip } from '@mui/material'
 import React from 'react'
 const status = [
-  { valuel: 1, label: 'Đang chờ xác nhận' },
-  { valuel: 2, label: 'Đã xác nhận, chờ vận chuyển' },
-  { valuel: 3, label: 'Đang vận chuyên' },
-  { valuel: 4, label: 'Giao hàng thành công' },
+  { value: 1, label: 'Đang chờ xác nhận' },
+  { value: 2, label: 'Đã xác nhận, chờ vận chuyển' },
+  { value: 3, label: 'Đang vận chuyên' },
+  { value: 4, label: 'Giao hàng thành công' },
 ]
 export const columns = [
   //   {
@@ -38,7 +38,7 @@ export const columns = [
     field: 'status',
     headerName: 'Trạng thái đơn hàng',
     width: 180,
-    renderCell: (params) => (params.row.paid === false ? 'COD' : 'VNPAY'),
+    renderCell: (params) => status.find((e) => e.value == params.row.status).label,
   },
   {
     field: 'products',

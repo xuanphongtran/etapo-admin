@@ -1,57 +1,64 @@
 import React from 'react'
 import { Box, useTheme } from '@mui/material'
-import { useGetAdminsQuery } from 'state/api'
+import { useGetUsersQuery } from 'state/api'
 import { DataGrid } from '@mui/x-data-grid'
 import Header from 'components/Header'
 
-const Admin = () => {
+const User = () => {
   const theme = useTheme()
-  const { data, isLoading } = useGetAdminsQuery()
+  const { data, isLoading } = useGetUsersQuery()
 
   const columns = [
     {
       field: '_id',
       headerName: 'ID',
-      flex: 1,
+      flex: 0.7,
     },
     {
       field: 'name',
-      headerName: 'Name',
+      headerName: 'Tên',
       flex: 0.5,
     },
     {
       field: 'email',
       headerName: 'Email',
-      flex: 1,
+      flex: 0.6,
     },
     {
       field: 'phoneNumber',
-      headerName: 'Phone Number',
+      headerName: 'Số điện thoại',
       flex: 0.5,
-      renderCell: (params) => {
-        return params.value.replace(/^(\d{3})(\d{3})(\d{4})/, '($1)$2-$3')
-      },
     },
     {
-      field: 'country',
-      headerName: 'Country',
+      field: 'address',
+      headerName: 'Địa chỉ',
       flex: 0.4,
     },
     {
-      field: 'occupation',
-      headerName: 'Occupation',
-      flex: 1,
+      field: 'ward',
+      headerName: 'Phường/xá',
+      flex: 0.5,
     },
     {
-      field: 'role',
-      headerName: 'Role',
+      field: 'district',
+      headerName: 'Quận/huyện',
       flex: 0.5,
+    },
+    {
+      field: 'province',
+      headerName: 'Tỉnh/thành phố',
+      flex: 0.5,
+    },
+    {
+      field: 'orders',
+      headerName: 'Số đơn hàng đã đặt',
+      flex: 0.6,
     },
   ]
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADMINS" subtitle="Managing admins and list of admins" />
+      <Header title="Người dùng" subtitle="Quản lý người dùng và danh sách người dùng" />
       <Box
         mt="40px"
         height="75vh"
@@ -91,4 +98,4 @@ const Admin = () => {
   )
 }
 
-export default Admin
+export default User

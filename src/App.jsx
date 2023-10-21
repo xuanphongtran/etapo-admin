@@ -8,13 +8,11 @@ import { themeSettings } from 'theme'
 import Dashboard from 'scenes/dashboard'
 import Products from 'scenes/products'
 import Layout from 'scenes/layout'
-import Geography from 'scenes/properties'
 import Overview from 'scenes/overview'
 import Daily from 'scenes/daily'
 import Monthly from 'scenes/monthly'
 import Breakdown from 'scenes/breakdown'
-import Admin from 'scenes/admin'
-import Performance from 'scenes/performance'
+import User from 'scenes/user'
 import Orders from 'scenes/orders'
 import Categories from 'scenes/categories'
 import Brands from 'scenes/brands'
@@ -43,8 +41,7 @@ function App() {
               <Route path="/daily" element={<Daily />} />
               <Route path="/monthly" element={<Monthly />} />
               <Route path="/breakdown" element={<Breakdown />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/performance" element={<Performance />} />
+              <Route path="/user" element={<User />} />
             </Route>
           </Routes>
         </ThemeProvider>

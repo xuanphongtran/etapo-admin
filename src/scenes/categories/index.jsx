@@ -127,7 +127,7 @@ const Categories = () => {
           open={openConfirm}
           onClose={() => setOpenConfirm(false)}
         >
-          <DialogTitle>{'Bạn có chắc chắn sẽ xoá Thương Hiệu ?'}</DialogTitle>
+          <DialogTitle>{'Bạn có chắc chắn sẽ xoá Danh mục ?'}</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Sẽ không thể khôi phục sau khi xoá, hãy chắc chắn về điều này

@@ -196,7 +196,7 @@ const Products = () => {
         dataToEdit={dataDetail}
         isOpen={isOpen}
         setIsOpen={handleOpenCreate}
-        refetch={refetch}
+        refetch={() => refetch()}
         setNotify={setNotify}
       />
       <Header subtitle="Danh sách sản phẩm" />

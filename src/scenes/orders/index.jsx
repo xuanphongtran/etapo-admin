@@ -1,11 +1,21 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react'
-import { Box, Button, useTheme } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  useTheme,
+} from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import { useGetOrdersQuery } from 'state/api'
+import { useAcceptOrderMutation, useCancelOrderMutation, useGetOrdersQuery } from 'state/api'
 import Header from 'components/Header'
 import { columns } from './order.schema'
 import OrderGridCustomToolbar from 'components/OrderGridCustomToolbar'
+import Notification from 'components/dialog/Notification'
 
 const Orders = () => {
   const theme = useTheme()
@@ -15,30 +25,138 @@ const Orders = () => {
   const [pageSize, setPageSize] = useState(20)
   const [sort, setSort] = useState({ field: 'createdAt', sort: 'desc' })
   const [search, setSearch] = useState('')
-  const [status, setStatus] = useState()
-
+  const [status, setStatus] = useState(1)
+  const [openConfirm, setOpenConfirm] = useState(false)
+  const [selectedRows, setSelectedRows] = useState([])
   const [searchInput, setSearchInput] = useState('')
-  const { data, isLoading } = useGetOrdersQuery({
+  const [accept, acceptError] = useAcceptOrderMutation()
+  const [cancel, cancelError] = useCancelOrderMutation()
+
+  const { data, isLoading, refetch } = useGetOrdersQuery({
     page,
     pageSize,
     sort: JSON.stringify(sort),
     search,
     status,
   })
+  const [notify, setNotify] = useState({ isOpen: false, message: '', type: 'info' })
+
+  const handleAcceptOrder = (status) => {
+    if (selectedRows.length === 1) {
+      const result = data.orders.find((e) => e._id === selectedRows[0])
+      if (result.status == status) {
+        accept({ id: result._id, status: status + 1 })
+        refetch()
+      } else {
+        setNotify({
+          isOpen: true,
+          message: 'Đơn hàng không ở trạng thái này này',
+          type: 'error',
+        })
+      }
+    } else if (selectedRows.length > 1) {
+      setNotify({
+        isOpen: true,
+        message: 'Chỉ chọn một thôi',
+        type: 'error',
+      })
+    } else {
+      setNotify({
+        isOpen: true,
+        message: 'Cần chọn một đơn hàng',
+        type: 'error',
+      })
+    }
+  }
+  const handleCancelOrder = () => {
+    if (selectedRows.length === 1) {
+      setOpenConfirm(true)
+    } else if (selectedRows.length > 1) {
+      setNotify({
+        isOpen: true,
+        message: 'Chọn nhiều qué',
+        type: 'error',
+      })
+    } else {
+      setNotify({
+        isOpen: true,
+        message: 'Chưa chọn kìa',
+        type: 'error',
+      })
+    }
+  }
+  const handleConfirmCancel = () => {
+    cancel({ id: selectedRows[0] })
+    setNotify({
+      isOpen: true,
+      message: 'Huỷ đơn hàng thành công',
+      type: 'success',
+    })
+    setOpenConfirm(false)
+    refetch()
+  }
+  const onRowSelectionModelChange = (ev) => {
+    setSelectedRows(ev)
+  }
+  useEffect(() => {
+    refetch()
+  }, [status])
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="Đơn hàng" />
       <Box m="1rem 0">
-        <Button sx={{ marginRight: '1rem' }} variant="contained">
+        <Button
+          sx={{ marginRight: '1rem' }}
+          variant="contained"
+          onClick={() => handleAcceptOrder(1)}
+        >
           Xác nhận đơn hàng
         </Button>
-        <Button sx={{ marginRight: '1rem' }} variant="contained">
-          Cập nhập trạng thái đơn hàng
+        <Button
+          sx={{ marginRight: '1rem' }}
+          variant="contained"
+          onClick={() => handleAcceptOrder(2)}
+        >
+          Vận chuyển đơn hàng
         </Button>
-        <Button sx={{ marginRight: '1rem' }} variant="contained" color="error">
+        <Button
+          sx={{ marginRight: '1rem' }}
+          variant="contained"
+          onClick={() => handleAcceptOrder(3)}
+        >
+          Hoàn tất đơn hàng
+        </Button>
+        <Button
+          sx={{ marginRight: '1rem' }}
+          variant="contained"
+          color="error"
+          onClick={handleCancelOrder}
+        >
           Huỷ đơn hàng
         </Button>
       </Box>
+      {/* Dialog Confirm */}
+      <Dialog
+        sx={{ backgroundColor: theme.palette.primary[700] }}
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+      >
+        <DialogTitle>{'Bạn có chắc chắn sẽ huỷ đơn hàng ?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Hãy chắc chắn về điều này</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={() => setOpenConfirm(false)}>
+            Không
+          </Button>
+          <Button variant="outlined" color="error" onClick={handleConfirmCancel} autoFocus>
+            Xác nhận
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Dialog Confirm */}
+      <Notification notify={notify} setNotify={setNotify} />
+
       <Header subtitle="Toàn bộ danh sách đơn hàng" />
 
       <Box
@@ -93,6 +211,7 @@ const Orders = () => {
           componentsProps={{
             toolbar: { searchInput, setSearchInput, setSearch, status, setStatus },
           }}
+          onRowSelectionModelChange={onRowSelectionModelChange}
         />
       </Box>
     </Box>

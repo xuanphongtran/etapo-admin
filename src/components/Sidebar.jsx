@@ -32,6 +32,7 @@ import {
   ShoppingCartOutlined,
   TodayOutlined,
   TrendingUpOutlined,
+  PersonOutlined,
   BrandingWatermarkOutlined,
 } from '@mui/icons-material'
 const navItems = [
@@ -70,43 +71,34 @@ const navItems = [
     icon: <ReceiptLongOutlined />,
   },
   {
+    label: 'Khách hàng',
+    text: 'User',
+    icon: <PersonOutlined />,
+  },
+  {
     text: 'Thống kê',
     icon: null,
   },
-  // {
-  //   label: 'Trang chủ',
-  //   text: 'Overview',
-  //   icon: <PointOfSaleOutlined />,
-  // },
-  // {
-  //   label: 'Trang chủ',
-  //   text: 'Daily',
-  //   icon: <TodayOutlined />,
-  // },
-  // {
-  //   label: 'Trang chủ',
-  //   text: 'Monthly',
-  //   icon: <CalendarMonthOutlined />,
-  // },
-  // {
-  //   label: 'Trang chủ',
-  //   text: 'Breakdown',
-  //   icon: <PieChartOutline />,
-  // },
-  // {
-  //   text: 'Management',
-  //   icon: null,
-  // },
-  // {
-  //   label: 'Trang chủ',
-  //   text: 'Admin',
-  //   icon: <AdminPanelSettingsOutlined />,
-  // },
-  // {
-  //   label: 'Trang chủ',
-  //   text: 'Performance',
-  //   icon: <TrendingUpOutlined />,
-  // },
+  {
+    label: 'Tổng quan',
+    text: 'Overview',
+    icon: <PointOfSaleOutlined />,
+  },
+  {
+    label: 'Hằng ngày',
+    text: 'Daily',
+    icon: <TodayOutlined />,
+  },
+  {
+    label: 'Hằng tháng',
+    text: 'Monthly',
+    icon: <CalendarMonthOutlined />,
+  },
+  {
+    label: 'Theo danh mục',
+    text: 'Breakdown',
+    icon: <PieChartOutline />,
+  },
 ]
 
 const Sidebar = ({ user, drawerWidth, isSidebarOpen, setIsSidebarOpen, isNonMobile }) => {

@@ -10,8 +10,7 @@ export const api = createApi({
     'Customers',
     'Orders',
     'Sales',
-    'Admins',
-    'Performance',
+    'Users',
     'Dashboard',
     'Categories',
     'Brands',
@@ -58,17 +57,25 @@ export const api = createApi({
       }),
       providesTags: ['Orders'],
     }),
+    acceptOrder: build.mutation({
+      query: (data) => {
+        return { url: `sales/acceptOrder`, method: 'PUT', body: data }
+      },
+      invalidatesTags: ['Put'],
+    }),
+    cancelOrder: build.mutation({
+      query: (data) => {
+        return { url: `sales/cancelOrder`, method: 'PUT', body: data }
+      },
+      invalidatesTags: ['Put'],
+    }),
     getSales: build.query({
       query: () => 'sales/sales',
       providesTags: ['Sales'],
     }),
-    getAdmins: build.query({
-      query: () => 'management/admins',
-      providesTags: ['Admins'],
-    }),
-    getUserPerformance: build.query({
-      query: (id) => `management/performance/${id}`,
-      providesTags: ['Performance'],
+    getUsers: build.query({
+      query: () => 'management/users',
+      providesTags: ['Users'],
     }),
     getDashboard: build.query({
       query: () => 'general/dashboard',
@@ -141,9 +148,10 @@ export const {
   useGetPropertiesQuery,
   useGetCustomersQuery,
   useGetOrdersQuery,
+  useAcceptOrderMutation,
+  useCancelOrderMutation,
   useGetSalesQuery,
-  useGetAdminsQuery,
-  useGetUserPerformanceQuery,
+  useGetUsersQuery,
   useGetDashboardQuery,
   useCreateProductMutation,
   useUpdateProductMutation,

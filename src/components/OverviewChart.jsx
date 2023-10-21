@@ -14,12 +14,12 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 
     const { monthlyData } = data
     const totalSalesLine = {
-      id: 'totalSales',
+      id: 'Doanh thu',
       color: theme.palette.secondary.main,
       data: [],
     }
     const totalUnitsLine = {
-      id: 'totalUnits',
+      id: 'Số lượng ',
       color: theme.palette.secondary[600],
       data: [],
     }
@@ -40,7 +40,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
     return [[totalSalesLine], [totalUnitsLine]]
   }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!data || isLoading) return 'Loading...'
+  if (!data || isLoading) return 'Đang tải...'
 
   return (
     <ResponsiveLine
@@ -101,7 +101,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? '' : 'Month',
+        legend: isDashboard ? '' : 'Tháng',
         legendOffset: 36,
         legendPosition: 'middle',
       }}
@@ -111,7 +111,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? '' : `Total ${view === 'sales' ? 'Revenue' : 'Units'} for Year`,
+        legend: isDashboard ? '' : `Tổng ${view === 'sales' ? 'doanh thu' : 'số lượng bán được'} `,
         legendOffset: -60,
         legendPosition: 'middle',
       }}

@@ -55,6 +55,7 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
       setValue('description', dataToEdit.description)
       setValue('category', dataToEdit.category)
       setValue('discount', dataToEdit.discount)
+      setValue('quantity', dataToEdit?.stat?.quantity)
       setProductProperties(dataToEdit.properties)
       setImages(dataToEdit.images)
     } else {
@@ -190,13 +191,19 @@ const ProductForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
               <TextField
                 sx={{ width: '100%', marginBottom: '1rem' }}
                 variant="outlined"
+                type="number"
                 InputProps={{
                   endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                  min: 0,
-                  max: 10,
                 }}
                 label="Giảm giá"
                 {...register('discount')}
+              />
+              <TextField
+                sx={{ width: '100%', marginBottom: '1rem' }}
+                variant="outlined"
+                type="number"
+                label="Số lưọng"
+                {...register('quantity')}
               />
               {isLoadingBrand ? (
                 <div>Loading...</div>

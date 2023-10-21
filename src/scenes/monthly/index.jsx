@@ -14,19 +14,19 @@ const Monthly = () => {
 
     const { monthlyData } = data
     const totalSalesLine = {
-      id: 'totalSales',
+      id: 'Tổng doanh thu',
       color: theme.palette.secondary.main,
       data: [],
     }
     const totalUnitsLine = {
-      id: 'totalUnits',
+      id: 'Tổng số lượng',
       color: theme.palette.secondary[600],
       data: [],
     }
 
-    Object.values(monthlyData).forEach(({ month, totalSales, totalUnits }) => {
-      totalSalesLine.data = [...totalSalesLine.data, { x: month, y: totalSales }]
-      totalUnitsLine.data = [...totalUnitsLine.data, { x: month, y: totalUnits }]
+    Object.values(monthlyData).forEach(({ monthName, totalSales, totalUnits }) => {
+      totalSalesLine.data = [...totalSalesLine.data, { x: monthName, y: totalSales }]
+      totalUnitsLine.data = [...totalUnitsLine.data, { x: monthName, y: totalUnits }]
     })
 
     const formattedData = [totalSalesLine, totalUnitsLine]
@@ -35,7 +35,7 @@ const Monthly = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="MONTHLY SALES" subtitle="Chart of monthlysales" />
+      <Header title="HẰNG THÁNG" subtitle="Biểu đồ bán hàng hàng tháng" />
       <Box height="75vh">
         {data ? (
           <ResponsiveLine
@@ -74,7 +74,7 @@ const Monthly = () => {
               },
             }}
             colors={{ datum: 'color' }}
-            margin={{ top: 50, right: 50, bottom: 70, left: 60 }}
+            margin={{ top: 50, right: 70, bottom: 70, left: 60 }}
             xScale={{ type: 'point' }}
             yScale={{
               type: 'linear',
@@ -92,7 +92,7 @@ const Monthly = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 90,
-              legend: 'Month',
+              legend: 'Tháng',
               legendOffset: 60,
               legendPosition: 'middle',
             }}
@@ -101,7 +101,7 @@ const Monthly = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: 'Total',
+              legend: 'Tổng số',
               legendOffset: -50,
               legendPosition: 'middle',
             }}

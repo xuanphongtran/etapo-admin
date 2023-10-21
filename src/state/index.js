@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   mode: 'dark',
-  userId: '63701cc1f03239b7f700000e',
+  userId: '64ad05f558e0b2545927c405',
 }
 
 export const globalSlice = createSlice({

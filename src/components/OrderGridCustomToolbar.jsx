@@ -6,71 +6,37 @@ import {
   TextField,
   InputAdornment,
   FormControlLabel,
-  FormGroup,
-  Checkbox,
   Typography,
+  RadioGroup,
+  FormControl,
+  FormLabel,
+  Radio,
 } from '@mui/material'
 import { GridToolbarContainer } from '@mui/x-data-grid'
 import FlexBetween from './FlexBetween'
 
 // eslint-disable-next-line react/prop-types
-const OrderGridCustomToolbar = ({ searchInput, setSearchInput, setSearch, status, setStatus }) => {
-  const [checkboxState, setCheckboxState] = useState({
-    checkbox1: false,
-    checkbox2: false,
-    checkbox3: false,
-    checkbox4: false,
-  })
-  const parseStatus = Object.keys(checkboxState).filter((key) => checkboxState[key])
-  const handleCheckboxChange = (name) => (event) => {
-    setCheckboxState({ ...checkboxState, [name]: event.target.checked })
+const OrderGridCustomToolbar = ({ searchInput, setSearchInput, setSearch, setStatus }) => {
+  const [value, setValue] = useState(1)
+
+  const handleChange = (event) => {
+    setValue(event.target.value)
+    setStatus(event.target.value)
   }
   return (
     <GridToolbarContainer>
       <FlexBetween width="100%">
-        <FlexBetween>
-          <Typography sx={{ mt: '5px', mr: '10px' }} variant="h6" gutterBottom>
-            Trạng thái đơn hàng
-          </Typography>
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkboxState.checkbox1}
-                  onChange={handleCheckboxChange('checkbox1')}
-                />
-              }
-              label="Checkbox 1"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkboxState.checkbox2}
-                  onChange={handleCheckboxChange('checkbox2')}
-                />
-              }
-              label="Checkbox 2"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkboxState.checkbox3}
-                  onChange={handleCheckboxChange('checkbox3')}
-                />
-              }
-              label="Checkbox 3"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkboxState.checkbox4}
-                  onChange={handleCheckboxChange('checkbox4')}
-                />
-              }
-              label="Checkbox 4"
-            />
-          </FormGroup>
-        </FlexBetween>
+        <FormControl>
+          <FlexBetween>
+            <FormLabel sx={{ mr: '10px' }}>Trạng thái đơn hàng</FormLabel>
+            <RadioGroup value={value} row onChange={handleChange}>
+              <FormControlLabel value={1} control={<Radio />} label="Đang chờ xác nhận" />
+              <FormControlLabel value={2} control={<Radio />} label="Đã xác nhận, chờ vận chuyển" />
+              <FormControlLabel value={3} control={<Radio />} label="Đang vận chuyên" />
+              <FormControlLabel value={4} control={<Radio />} label="Giao hàng thành công" />
+            </RadioGroup>
+          </FlexBetween>
+        </FormControl>
         <TextField
           label="Tìm kiếm..."
           sx={{ mb: '0.5rem', width: '15rem' }}
@@ -82,7 +48,6 @@ const OrderGridCustomToolbar = ({ searchInput, setSearchInput, setSearch, status
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => {
-                    setStatus(parseStatus)
                     setSearch(searchInput)
                     setSearchInput('')
                   }}
