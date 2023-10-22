@@ -81,9 +81,7 @@ const Categories = () => {
     setOpenConfirm(false)
     refetch()
   }
-  const onCellDoubleClick = (ev) => {
-    console.log(ev)
-  }
+
   const onRowSelectionModelChange = (ev) => {
     setSelectedRows(ev)
   }
@@ -178,7 +176,6 @@ const Categories = () => {
           columns={columns}
           checkboxSelection
           hideFooterSelectedRowCount
-          onCellDoubleClick={onCellDoubleClick}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />
       </Box>

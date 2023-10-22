@@ -96,9 +96,7 @@ const Categories = () => {
     setOpenConfirm(false)
     refetch()
   }
-  const onCellDoubleClick = (ev) => {
-    console.log(ev)
-  }
+
   const onRowSelectionModelChange = (ev) => {
     setSelectedRows(ev)
   }
@@ -205,7 +203,6 @@ const Categories = () => {
           componentsProps={{
             toolbar: { searchInput, setSearchInput, setSearch },
           }}
-          onCellDoubleClick={onCellDoubleClick}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />
       </Box>

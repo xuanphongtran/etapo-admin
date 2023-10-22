@@ -25,7 +25,6 @@ const BrandForm = ({ dataToEdit, isOpen, setIsOpen, refetch, setNotify }) => {
       reset()
       setProperties([])
     }
-    console.log(properties)
   }, [isOpen])
 
   const handleCreate = (data) => {
