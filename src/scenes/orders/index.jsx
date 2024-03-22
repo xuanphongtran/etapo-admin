@@ -41,11 +41,11 @@ const Orders = () => {
   })
   const [notify, setNotify] = useState({ isOpen: false, message: '', type: 'info' })
 
-  const handleAcceptOrder = (status) => {
+  const handleAcceptOrder = async (status) => {
     if (selectedRows.length === 1) {
       const result = data.orders.find((e) => e._id === selectedRows[0])
       if (result.status == status) {
-        accept({ id: result._id, status: status + 1 })
+        await accept({ id: result._id, status: status + 1 })
         refetch()
       } else {
         setNotify({
